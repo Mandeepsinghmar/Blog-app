@@ -11,6 +11,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* flex-wrap: wrap; */
   max-width: 1000px;
   margin: 0 auto;
   border-bottom: 1px solid #f2f2f2;
@@ -36,4 +37,29 @@
   max-width: 600px;
   margin: 40px auto;
   padding: 20px;
+}
+
+.blog-preview {
+  padding: 10px 16px;
+  margin: 20px 0;
+  border-bottom: 1px solid #fafafa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.blog-preview:hover {
+  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.1);
+}
+.blog-preview h2 {
+  font-size: 20px;
+  color: #f1356d;
+  margin-bottom: 8px;
+}
+.blog-preview button {
+  background: #f1356d;
+  color: #fff;
+  border: 0;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
 }

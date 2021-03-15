@@ -1,12 +1,14 @@
-function Blog({ blogs, handleDelte }) {
+function Blog({ blogs, title }) {
   return (
-    <div>
+    <div className="blog-list">
+      <h1>{title}</h1>
       {blogs.map((blog) => (
-        <div key={blog.id}>
-          <h2>{blog.title}</h2>
-          <p>{blog.author}</p>
-          <p>{blog.body}</p>
-          <button onClick={() => handleDelete(blog.id)}>Delete</button>
+        <div className="blog-preview" key={blog.id}>
+          <div>
+            <h2>{blog.title}</h2>
+            <p>Written by {blog.author}</p>
+          </div>
+          {/* <button onClick={() => handleDelete(blog.id)}>Delete</button> */}
         </div>
       ))}
     </div>
