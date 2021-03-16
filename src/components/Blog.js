@@ -1,16 +1,29 @@
-function Blog({ blogs, title }) {
+import React from "react";
+import Loader from "react-loader-spinner";
+import useFetch from "./useFetch";
+import BlogList from "./BlogList";
+
+function Blog() {
+  const { data: blogs, isLoading, error } = useFetch(
+    "http://localhost:8000/blogs"
+  );
+
   return (
-    <div className="blog-list">
-      <h1>{title}</h1>
-      {blogs.map((blog) => (
-        <div className="blog-preview" key={blog.id}>
-          <div>
-            <h2>{blog.title}</h2>
-            <p>Written by {blog.author}</p>
-          </div>
-          {/* <button onClick={() => handleDelete(blog.id)}>Delete</button> */}
+    <div className="content">
+      {error && <div>Error: {error}</div>}
+      {isLoading && (
+        <div style={{ minHeight: "50vh" }}>
+          <Loader type="Oval" color="#f1356d" height={40} width={40} />
+          Loading 🏀🥎
         </div>
-      ))}
+      )}
+      {blogs && (
+        <BlogList
+          blogs={blogs}
+          title={"All blogs!"}
+          // handleDelete={handleDelete}
+        />
+      )}
     </div>
   );
 }

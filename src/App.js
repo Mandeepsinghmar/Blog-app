@@ -1,48 +1,58 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import "./App.css";
+import CreateBlog from "./components/CreateBlog";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Blog from "./components/Blog";
-import Loader from "react-loader-spinner";
-import useFetch from "./components/useFetch";
+import BlogDetails from "./components/BlogDetails";
+import NotFound from "./components/NotFound";
+import { logInWithGoogle, logout } from "./services/auth";
+// import { UserContextProvider } from "./contexts/user";
 
 function App() {
-  const { data: blogs, isLoading, error } = useFetch(
-    "http://localhost:8000/blogs"
-  );
+  const [user, setUser] = useState(null);
+  const [logout, setLogout] = useState();
 
-  // const handleDelete = (id) => {
-  //   const newBlogs = blogs.filter((blog) => blog.id !== id);
+  const logInBtnClick = async () => {
+    let userByLogIn = await logInWithGoogle();
+    if (userByLogIn) setUser(userByLogIn);
+  };
 
-  //   setBlogs(newBlogs);
-  // };
-
+  const logOutBtnClick = async () => {
+    let logout_success = await logout();
+    if (logout_success) setLogout(!logout_success);
+  };
   return (
-    <div className="app">
-      <Navbar />
+    <Router>
+      <div className="app">
+        <Navbar
+          logout={logout}
+          user={user}
+          logOutBtnClick={logOutBtnClick}
+          logInBtnClick={logInBtnClick}
+        />
+        <div className="content">
+          <Switch>
+            <Route exact path="/">
+              <Blog />
+            </Route>
+            <Route path="/create">
+              <CreateBlog />
+            </Route>
+            <Route path="/blogs/:id">
+              <BlogDetails />
+            </Route>
 
-      <div className="content">
-        {error && <div>{error}</div>}
-        {isLoading && (
-          <Loader
-            style={{ minHeight: "50vh" }}
-            type="Oval"
-            color="#f1356d"
-            height={40}
-            width={40}
-          />
-        )}
-        {blogs && (
-          <Blog
-            blogs={blogs}
-            title={"All blogs!"}
-            // handleDelete={handleDelete}
-          />
-        )}
+            <Route path="*">
+              <NotFound />
+            </Route>
+          </Switch>
+        </div>
+
+        <Footer />
       </div>
-
-      <Footer />
-    </div>
+    </Router>
   );
 }
 
