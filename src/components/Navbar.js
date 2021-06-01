@@ -1,66 +1,104 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { logout, logInWithGoogle } from "../services/auth";
 
-function Navbar({ user, logInBtnClick }) {
+function Navbar({ user, logout, login }) {
   return (
-    <div className="navbar">
+    <div className="navbar" style={{ marginTop: "0px", padding: "5px" }}>
       <h1>JS</h1>
 
       <div className="navbar-links">
-        <Link className="link" to="/">
-          Home
-        </Link>
+        {/* {user ? ( */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "0px",
+            // gap: "10px",
+            // height: "40px",
+          }}
+        >
+          <Link className="link" to="/" style={{ color: "#fff" }}>
+            Home
+          </Link>
 
-        {user ? (
-          <div>
-            <Link
-              className="link"
-              style={{
-                color: "#fff",
-                backgroundColor: "#f1356d",
-                borderRadius: "8px",
-              }}
-              to="/create"
-            >
-              Write a post
-            </Link>
-
-            <Link
-              className="link"
-              style={{
-                color: "#fff",
-                backgroundColor: "#f1356d",
-                borderRadius: "8px",
-              }}
-              to="/"
-            >
-              Your articles
-            </Link>
-
-            <img
-              style={{ borderRadius: "50%", height: "40px" }}
-              src={user.photoURL}
-              alt=""
-            />
-            <span style={{ fontSize: "0.8rem", marginLeft: "15px" }}>
-              {user.displayName}
-            </span>
-          </div>
-        ) : (
-          <button
+          <Link
             className="link"
             style={{
-              border: "0",
               color: "#fff",
               backgroundColor: "#f1356d",
               borderRadius: "8px",
-              cursor: "pointer",
             }}
-            onClick={logInBtnClick}
+            to="/create"
           >
-            Sign In
-          </button>
-        )}
+            Write your blog
+          </Link>
+          <Link
+            className="link"
+            style={{
+              color: "#fff",
+              backgroundColor: "#f1356d",
+              borderRadius: "8px",
+            }}
+            to="/yourblogs"
+          >
+            Your blogs
+          </Link>
+
+          {user ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+
+                alignItems: "center",
+              }}
+            >
+              <button
+                className="link"
+                style={{
+                  border: "0",
+                  color: "#fff",
+                  backgroundColor: "#f1356d",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                }}
+                onClick={() => logout()}
+              >
+                Logout
+              </button>
+              <div>
+                <img
+                  style={{
+                    borderRadius: "50%",
+                    height: "30px",
+                    width: "30px",
+                  }}
+                  src={user.photoURL}
+                  alt=""
+                />
+                <p style={{ color: "#fff", fontSize: "0.6rem" }}>
+                  {user.displayName}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <button
+              className="link"
+              style={{
+                border: "0",
+                color: "#000",
+                backgroundColor: "#fff",
+                borderRadius: "8px",
+                cursor: "pointer",
+              }}
+              onClick={() => login()}
+            >
+              Sign In
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

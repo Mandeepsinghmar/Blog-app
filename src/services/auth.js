@@ -20,10 +20,10 @@ export const logout = async () => {
   await auth
     .signOut()
     .then(() => {
+      console.log("logout successful");
       logout_success = true;
     })
-    .catch((err) => {
-      console.log(err.message);
-    });
+    .catch((err) => console.log(err.message));
+
   return logout_success;
 };
