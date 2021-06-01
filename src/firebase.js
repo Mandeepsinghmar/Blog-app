@@ -1,19 +1,20 @@
 import firebase from "firebase";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBXlZdzvlzxATKxuVQgB292SXTCBQ6Diws",
-  authDomain: "blog-app-5793c.firebaseapp.com",
-  projectId: "blog-app-5793c",
-  storageBucket: "blog-app-5793c.appspot.com",
-  messagingSenderId: "887435381544",
-  appId: "1:887435381544:web:039ec47c4747d2e2595e1d",
+  apiKey: "AIzaSyD1S9VCmrS6eaZvx_mLXzgl73wa8baPuP0",
+  authDomain: "react-firebase-blog-app-28249.firebaseapp.com",
+  projectId: "react-firebase-blog-app-28249",
+  storageBucket: "react-firebase-blog-app-28249.appspot.com",
+  messagingSenderId: "141567946778",
+  appId: "1:141567946778:web:4567fa0e25fe45670121a3",
 };
 
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 
-const db = firebaseApp.firestore();
+const db = firebase.firestore();
 const auth = firebase.auth();
 const storage = firebase.storage();
 const provider = new firebase.auth.GoogleAuthProvider();
+const timestamp = firebase.firestore.FieldValue.serverTimestamp;
 
-export { db, auth, provider, storage };
+export { db, auth, provider, storage, timestamp };

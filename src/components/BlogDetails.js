@@ -1,43 +1,73 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router";
-import useFetch from "./useFetch";
+import { db } from "../firebase";
+
 import Loader from "react-loader-spinner";
 
-export default function BlogDetails() {
+const BlogDetails = () => {
   const { id } = useParams();
-  const { data: blog, isLoading, error } = useFetch(
-    "http://localhost:8000/blogs/" + id
-  );
-  const history = useHistory();
+  console.log(id);
+  const [blog, setBlog] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleDelete = () => {
-    fetch("http://localhost:8000/blogs/" + blog.id, {
-      method: "DELETE",
-    }).then(() => {
-      history.push("/");
+  useEffect(() => {
+    db.collection("blogs").onSnapshot((snapshot) => {
+      snapshot.forEach((doc) => {
+        if (doc.id === id) {
+          setLoading(false);
+          setBlog(doc.data());
+        } else {
+          setLoading(false);
+        }
+      });
     });
-  };
+  }, []);
 
   return (
-    <div className="blog-details">
-      {error && <div>Error: {error}</div>}
+    <div className="blog-details" style={{ minHeight: "60vh" }}>
+      {/* {error && <div>Error: {error}</div>}
       {isLoading && (
         <div style={{ minHeight: "50vh" }}>
           <Loader type="Oval" color="#f1356d" height={40} width={40} />
           Loading 🏀🥎
         </div>
-      )}
-      {blog && (
-        <article>
-          <h2>{blog.title}</h2>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <p>Written by {blog.author}</p>
-            <button onClick={handleDelete}>🎃</button>
-          </div>
+      )} */}
+      {loading && <p>loading..</p>}
+      {blog ? (
+        <div style={{ display: "flex", justifyContent: "space-around" }}>
+          <div>
+            <span
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "6px",
+                alignItems: "center",
+                fontSize: "0.9rem",
+              }}
+            >
+              <img
+                style={{
+                  borderRadius: "50%",
+                  height: "30px",
+                }}
+                src={blog.userPicture}
+                alt=""
+              />
+              <p> {blog.author}</p>
+            </span>
+            <h1 style={{ fontSize: "2.5rem" }}>{blog.blogName}</h1>
 
-          <div>{blog.body}</div>
-        </article>
+            <h2>{blog.blogContent}</h2>
+          </div>
+          <div>
+            <img src={blog.userPicture} alt="" />
+            <p> {blog.author}</p>
+          </div>
+        </div>
+      ) : (
+        <p>loading..</p>
       )}
     </div>
   );
-}
+};
+export default BlogDetails;
