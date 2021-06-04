@@ -1,16 +1,15 @@
+import react, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import useFirestore from "../hooks/useFirestore";
 import Loader from "react-loader-spinner";
-function BlogList() {
+
+function BlogList(user) {
   const { docs } = useFirestore("blogs");
-  // if (docs.length > 0) {
-  //   console.log(docs);
-  // } else {
-  //   console.log("not fetched yet");
-  // }
+
   return (
     <div className="blog-list">
-      <h1>All blogs</h1>
+      {/* <input type="text" onChange={(e) => setSearchBlog(e.target.value)} /> */}
+      <h1>Feeds - Read Javscript blogs</h1>
 
       {docs ? (
         docs.map((blog) => (
@@ -65,6 +64,8 @@ function BlogList() {
               </p>
               <p>{blog.blogContent.slice(`0`, 200)}...</p>
             </Link>
+            {/* {blog.likes && blog.likes.length} likes{" "} */}
+            {blog.comments ? blog.comments.length : "0"} comments
           </div>
         ))
       ) : (

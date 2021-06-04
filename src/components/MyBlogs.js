@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import useFetchUserBlogs from "../hooks/useFetchUserBlogs";
 import Loader from "react-loader-spinner";
 
-const YourArticles = ({ user }) => {
-  const { docs } = useFetchUserBlogs(user);
+const MyBlogs = ({ user }) => {
+  const { docs } = useFetchUserBlogs(user ? user : "");
 
   console.log(docs);
   return (
@@ -30,6 +30,8 @@ const YourArticles = ({ user }) => {
                   marginTop: "20px",
                   display: "flex",
                   flexDirection: "column",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
                 }}
               >
                 <div
@@ -37,6 +39,7 @@ const YourArticles = ({ user }) => {
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
+                    gap: "5px",
                   }}
                   key={blog.id}
                 >
@@ -62,14 +65,17 @@ const YourArticles = ({ user }) => {
                 >
                   <p
                     style={{
-                      backgroundColor: "pink",
+                      backgroundColor: "black",
                       padding: "10px",
                       borderRadius: "33px",
+                      color: "pink",
+                      marginBottom: "15px",
+                      marginTop: "15px",
                     }}
                   >
                     {blog.blogName}{" "}
                   </p>
-                  <p>{blog.blogContent}</p>
+                  <p>{blog.blogContent.slice(0, 250)}</p>
                 </Link>
               </div>
             ))
@@ -104,4 +110,4 @@ const YourArticles = ({ user }) => {
   );
 };
 
-export default YourArticles;
+export default MyBlogs;

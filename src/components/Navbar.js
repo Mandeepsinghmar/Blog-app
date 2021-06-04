@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { logout, logInWithGoogle } from "../services/auth";
 
 function Navbar({ user, logout, login }) {
+  const [activePage, setActivePage] = useState(false);
+
   return (
     <div className="navbar" style={{ marginTop: "0px", padding: "5px" }}>
       <h1>JS</h1>
@@ -19,32 +21,16 @@ function Navbar({ user, logout, login }) {
             // height: "40px",
           }}
         >
-          <Link className="link" to="/" style={{ color: "#fff" }}>
+          <NavLink exact className="link" activeClassName="active" to="/">
             Home
-          </Link>
+          </NavLink>
 
-          <Link
-            className="link"
-            style={{
-              color: "#fff",
-              backgroundColor: "#f1356d",
-              borderRadius: "8px",
-            }}
-            to="/create"
-          >
+          <NavLink className="link" activeClassName="active" to="/create">
             Write your blog
-          </Link>
-          <Link
-            className="link"
-            style={{
-              color: "#fff",
-              backgroundColor: "#f1356d",
-              borderRadius: "8px",
-            }}
-            to="/yourblogs"
-          >
-            Your blogs
-          </Link>
+          </NavLink>
+          <NavLink activeClassName="active" className="link" to="/myblogs">
+            My blogs
+          </NavLink>
 
           {user ? (
             <div
@@ -63,6 +49,7 @@ function Navbar({ user, logout, login }) {
                   backgroundColor: "#f1356d",
                   borderRadius: "8px",
                   cursor: "pointer",
+                  marginLeft: "10px",
                 }}
                 onClick={() => logout()}
               >

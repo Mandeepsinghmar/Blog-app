@@ -40,10 +40,18 @@
 .navbar .links {
   margin-left: auto;
 }
-.navbar .link {
+.navbar-links .link {
   margin-left: 16px;
   text-decoration: none;
   padding: 6px;
+  color: #fff;
+  background-color: #f1356d;
+  border-radius: 8px;
+}
+.active {
+  background-color: black !important;
+  border: 1px solid pink;
+  color: #fff !important;
 }
 
 .content {
@@ -87,9 +95,7 @@
   color: #f1356d;
   margin-bottom: 10px;
 }
-.blog-details div {
-  margin: 20px 0;
-}
+
 .blog-details button {
   background: #f1356d;
   color: #fff;
@@ -114,25 +120,34 @@
   color: #f1356d;
   margin-bottom: 30px;
 }
+.form {
+  width: 600px;
+}
 .create textarea {
   width: 100%;
-  height: 130px;
+  /* height: 130px; */
+  height: auto;
   padding: 6px 10px;
   margin: 10px 0;
-  border: 1px solid #ddd;
+  /* border: 1px solid #ddd; */
+  border: none;
+
   box-sizing: border-box;
   display: block;
   overflow: hidden;
   outline: none;
+  font-size: 1.2rem;
 }
 
 .create .blog-name {
   overflow: hidden;
   width: 100%;
-  height: 60px;
+  height: auto;
   padding: 6px 10px;
   margin: 10px 0;
-  border: 1px solid #ddd;
+  font-size: 2rem;
+  /* border: 1px solid #ddd; */
+  border: none;
   box-sizing: border-box;
   display: block;
   outline: none;
@@ -144,4 +159,8 @@
   padding: 8px;
   border-radius: 8px;
   cursor: pointer;
+}
+.editProfile input {
+  width: 100%;
+  padding: 6px;
 }

@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { db, timestamp } from "../firebase";
+import TextareaAutosize from "react-autosize-textarea";
 
 function CreateBlog({ user }) {
+  console.log(user);
   const [blogName, setBlogName] = useState("");
   const [blogContent, setBlogContent] = useState("");
   // const [author, setAuthor] = useState("");
@@ -17,9 +19,10 @@ function CreateBlog({ user }) {
       const userPicture = user.photoURL;
       const author = user.displayName;
       const userId = user.uid;
+
       db.collection("blogs").add({
         postedBy: userId,
-        user,
+        // user,
         blogName,
         author,
         blogContent,
@@ -35,26 +38,23 @@ function CreateBlog({ user }) {
 
   return (
     <div className="create">
-      <h2>Add a new Blog</h2>
-      <form onSubmit={handleSubmit}>
-        <label>Blog Name:</label>
-        <textarea
+      <h1 style={{ marginBottom: "20px" }}>Create a new Blog</h1>
+      <form onSubmit={handleSubmit} className="form">
+        <TextareaAutosize
           className="blog-name"
-          rows="5"
           type="text"
           placeholder="write Your blog name here."
           required
           value={blogName}
           onChange={(e) => setBlogName(e.target.value)}
         />
-        <label>Blog Content:</label>
-        <textarea
-          rows="10"
+
+        <TextareaAutosize
           placeholder="write your blog content here."
           required
           value={blogContent}
           onChange={(e) => setBlogContent(e.target.value)}
-        ></textarea>
+        ></TextareaAutosize>
         {/* <label>Article Author:</label> */}
         {/* <input
           type="text"

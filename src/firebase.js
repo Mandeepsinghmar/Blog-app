@@ -10,11 +10,18 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-
+const { FieldValue } = firebase.firestore;
 const db = firebase.firestore();
 const auth = firebase.auth();
 const storage = firebase.storage();
 const provider = new firebase.auth.GoogleAuthProvider();
+// provider.addScope("bio");
+// provider.addScope("backgroundImage");
+// provider.addScope("websiteUrl");
+// provider.addScope("Location");
+// provider.addScope("CurrentlyLearning");
+// provider.addScope("Skills");
+// provider.addScope("Work");
 const timestamp = firebase.firestore.FieldValue.serverTimestamp;
 
-export { db, auth, provider, storage, timestamp };
+export { db, auth, provider, FieldValue, storage, timestamp };
