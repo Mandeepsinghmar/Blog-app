@@ -9,7 +9,7 @@ const MyBlogs = ({ user }) => {
 
   console.log(docs);
   return (
-    <div style={{ minHeight: "70vh" }}>
+    <div style={{ minHeight: "70vh", marginLeft: "200px" }}>
       {user ? (
         <div className="blog-list">
           {docs.length === 0 ? (
@@ -18,7 +18,7 @@ const MyBlogs = ({ user }) => {
               <Link to="/create">Click here to write your first blog</Link>
             </div>
           ) : (
-            <h1>Your All blogs</h1>
+            <h1 style={{ marginLeft: "-400px" }}>Your All blogs</h1>
           )}
 
           {docs ? (
@@ -28,55 +28,80 @@ const MyBlogs = ({ user }) => {
                 key={blog.id}
                 style={{
                   marginTop: "20px",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "flex-start",
-                  alignItems: "flex-start",
+
+                  border: "1px solid #e2e2e2",
+                  width: "600px",
+                  padding: "6px 12px 0px 12px",
+                  gap: "5px",
                 }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "5px",
-                  }}
-                  key={blog.id}
-                >
-                  {" "}
-                  <img
-                    src={blog.userPicture}
-                    style={{
-                      width: "40px",
-                      height: "40px",
-                      borderRadius: "50%",
-                    }}
-                    alt=""
-                  />
-                  <p>{blog.author}</p>
-                </div>
                 <Link
+                  className="active-link"
                   to={`/blog/${blog.id}`}
                   style={{
-                    textDecoration: "none",
                     display: "flex",
                     flexDirection: "column",
+                    justifyContent: "flex-start",
+                    alignItems: "flex-start",
+                    textDecoration: "none",
                   }}
                 >
-                  <p
+                  <div
                     style={{
-                      backgroundColor: "black",
-                      padding: "10px",
-                      borderRadius: "33px",
-                      color: "pink",
-                      marginBottom: "15px",
-                      marginTop: "15px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "5px",
+                    }}
+                    key={blog.id}
+                  >
+                    {" "}
+                    <img
+                      src={blog.userPicture}
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        borderRadius: "50%",
+                      }}
+                      alt=""
+                    />
+                    <p
+                      style={{
+                        fontSize: "0..7rem",
+                        textTransform: "lowercase",
+                      }}
+                    >
+                      {blog.author}
+                    </p>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "flex-start",
+                      alignItems: "flex-start",
+                      paddingLeft: "30px",
+                      marginTop: "5px",
                     }}
                   >
-                    {blog.blogName}{" "}
-                  </p>
-                  <p>{blog.blogContent.slice(0, 250)}</p>
+                    <p
+                      style={{
+                        fontSize: "1.3rem",
+                        fontWeight: "800",
+
+                        padding: "3px 0px",
+                      }}
+                    >
+                      {blog.blogName}{" "}
+                    </p>
+                    <p>{blog.blogContent.slice(`0`, 200)}...</p>
+                    <div style={{ padding: "3px 0px" }}>
+                      {" "}
+                      {blog.comments ? blog.comments.length : "0"} comments
+                    </div>
+                  </div>
                 </Link>
+                {/* {blog.likes && blog.likes.length} likes{" "} */}
               </div>
             ))
           ) : (

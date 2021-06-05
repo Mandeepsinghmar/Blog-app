@@ -1,24 +1,38 @@
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { logout, logInWithGoogle } from "../services/auth";
+import "../index.css";
 
 function Navbar({ user, logout, login }) {
   const [activePage, setActivePage] = useState(false);
 
   return (
-    <div className="navbar" style={{ marginTop: "0px", padding: "5px" }}>
-      <h1>JS</h1>
+    <div
+      className="navbar"
+      style={{ backgroundColor: "#eef0f1", marginTop: "0px", padding: "5px" }}
+    >
+      <h1 style={{ marginTop: "50px" }}>JS</h1>
 
-      <div className="navbar-links">
-        {/* {user ? ( */}
+      <div
+        className="navbar-links"
+        style={{
+          display: "flex",
+          // marginTop: "30px",
+          flexDirection: "column",
+          justifyContent: "space-around",
+          alignItems: "center",
+          gap: "30px",
+        }}
+      >
+        {/* <div> */}
         <div
           style={{
             display: "flex",
+            flexDirection: "column",
             justifyContent: "center",
-            alignItems: "center",
-            marginTop: "0px",
-            // gap: "10px",
-            // height: "40px",
+            alignItems: "flex-start",
+
+            gap: "20px",
           }}
         >
           <NavLink exact className="link" activeClassName="active" to="/">
@@ -26,66 +40,55 @@ function Navbar({ user, logout, login }) {
           </NavLink>
 
           <NavLink className="link" activeClassName="active" to="/create">
-            Write your blog
+            Write blog
           </NavLink>
           <NavLink activeClassName="active" className="link" to="/myblogs">
             My blogs
           </NavLink>
+        </div>
 
-          {user ? (
-            <div
+        {user ? (
+          <div
+            style={{
+              marginTop: "0px",
+            }}
+          >
+            <img
               style={{
-                display: "flex",
-                justifyContent: "center",
-
-                alignItems: "center",
+                borderRadius: "50%",
+                height: "80px",
+                width: "80px",
+                cursor: "pointer",
               }}
-            >
-              <button
-                className="link"
-                style={{
-                  border: "0",
-                  color: "#fff",
-                  backgroundColor: "#f1356d",
-                  borderRadius: "8px",
-                  cursor: "pointer",
-                  marginLeft: "10px",
-                }}
-                onClick={() => logout()}
-              >
-                Logout
-              </button>
-              <div>
-                <img
-                  style={{
-                    borderRadius: "50%",
-                    height: "30px",
-                    width: "30px",
-                  }}
-                  src={user.photoURL}
-                  alt=""
-                />
-                <p style={{ color: "#fff", fontSize: "0.6rem" }}>
-                  {user.displayName}
-                </p>
-              </div>
-            </div>
-          ) : (
-            <button
-              className="link"
+              src={user.photoURL}
+              alt=""
+              onClick={() => logout()}
+            />
+            <p style={{ color: "#000", fontSize: "1.2rem" }}>
+              {user.displayName}
+            </p>
+          </div>
+        ) : (
+          <div>
+            <p
+              className="login"
               style={{
+                marginTop: "-10px",
                 border: "0",
-                color: "#000",
-                backgroundColor: "#fff",
+                color: "#fff",
+                backgroundColor: "#f1356d",
                 borderRadius: "8px",
                 cursor: "pointer",
+                padding: "6px 12px",
+                marginLeft: "-12px",
               }}
               onClick={() => login()}
             >
               Sign In
-            </button>
-          )}
-        </div>
+            </p>
+          </div>
+        )}
+        {/* </div> */}
       </div>
     </div>
   );

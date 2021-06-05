@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { db, timestamp } from "../firebase";
+import { db, storage, timestamp } from "../firebase";
 import TextareaAutosize from "react-autosize-textarea";
+import Loader from "react-loader-spinner";
 
 function CreateBlog({ user }) {
   console.log(user);
@@ -11,6 +12,50 @@ function CreateBlog({ user }) {
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
   const [pleaseLogin, setPleaseLogin] = useState(false);
+  const [file, setFile] = useState(null);
+  const [fileErr, setFileErr] = useState(null);
+  const [bannerUrl, setBannerUrl] = useState(null);
+  const [UploadErr, setUploadErr] = useState(null);
+  const [progress, setProgress] = useState(null);
+  const [loader, setLoader] = useState(null);
+
+  const changeHandler = (e) => {
+    if (user) {
+      let selectedFile = e.target.files[0];
+      const types = ["image/png", "image/jpeg"];
+
+      if (selectedFile && types.includes(selectedFile.type)) {
+        setFile(selectedFile);
+        setFileErr("");
+      } else {
+        setFile(null);
+        setFileErr("Please select an image file (png or jpeg)");
+      }
+    } else {
+    }
+  };
+
+  useEffect(() => {
+    // reference on storage bucket
+    if (file) {
+      const storageRef = storage.ref(file.name);
+      storageRef.put(file).on(
+        "state_changed",
+        (snap) => {
+          let percentage = (snap.bytesTransferred / snap.totalBytes) * 100;
+          setProgress(percentage);
+        },
+        (err) => {
+          setUploadErr(err);
+        },
+        async () => {
+          const url = await storageRef.getDownloadURL();
+          setBannerUrl(url);
+          setProgress(null);
+        }
+      );
+    }
+  }, [file]);
 
   const handleSubmit = (e) => {
     if (user) {
@@ -27,6 +72,7 @@ function CreateBlog({ user }) {
         author,
         blogContent,
         createdAt,
+        bannerUrl,
         userPicture,
       });
       history.push("/");
@@ -36,21 +82,91 @@ function CreateBlog({ user }) {
     }
   };
 
+  const deleteBanner = () => {
+    const url = storage.refFromURL(bannerUrl);
+    url
+      .delete()
+      .then(() => {
+        setBannerUrl(null);
+        console.log("image deleted");
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
-    <div className="create">
+    <div className="create" style={{ marginLeft: "200px", width: "100%" }}>
       <h1 style={{ marginBottom: "20px" }}>Create a new Blog</h1>
       <form onSubmit={handleSubmit} className="form">
+        <div style={{ display: "flex", gap: "20px" }}>
+          <label>
+            <input type="file" name="blog-banner" onChange={changeHandler} />
+            <span>Upload banner</span>
+          </label>
+
+          {fileErr && <div>{fileErr}</div>}
+          {/* {file && <div>{file.name}</div>} */}
+          {progress && (
+            <div
+            // style={{
+            //   width: progress + "%",
+            //   marginTop: "10px",
+            //   backgroundColor: "pink",
+            //   height: "5px",
+            // }}
+            >
+              <Loader type="Oval" color="#f1356d" height={20} width={20} />
+            </div>
+          )}
+          {bannerUrl && (
+            <div style={{ display: "flex", gap: "1px" }}>
+              <img
+                src={bannerUrl}
+                style={{
+                  width: "50px",
+
+                  height: "50px",
+                  borderRadius: "10px",
+                  marginTop: "-10px",
+                }}
+                alt=""
+              />
+              <div
+                onClick={deleteBanner}
+                style={{
+                  marginTop: "-20px",
+                  fontWeight: "bold",
+                  marginLeft: "-6px",
+                  color: "red",
+                  cursor: "pointer",
+                }}
+              >
+                x
+              </div>
+            </div>
+          )}
+        </div>
         <TextareaAutosize
+          style={{
+            backgroundColor: "#eef0f1",
+            borderRadius: "10px",
+            border: "1px solid #e2e2e2",
+          }}
           className="blog-name"
           type="text"
-          placeholder="write Your blog name here."
+          placeholder="Blog name"
           required
           value={blogName}
           onChange={(e) => setBlogName(e.target.value)}
         />
 
         <TextareaAutosize
-          placeholder="write your blog content here."
+          style={{
+            backgroundColor: "#eef0f1",
+            borderRadius: "10px",
+            border: "1px solid #e2e2e2",
+            padding: "12px",
+          }}
+          placeholder="write something"
           required
           value={blogContent}
           onChange={(e) => setBlogContent(e.target.value)}

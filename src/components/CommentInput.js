@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import TextareaAutosize from "react-autosize-textarea/lib";
 import { db, timestamp } from "../firebase";
 
 const CommentInput = ({ user, id, blog, comments }) => {
@@ -6,7 +7,8 @@ const CommentInput = ({ user, id, blog, comments }) => {
   const [commentsArray, setCommentsArray] = useState(comments ? comments : []);
 
   console.log(id, user, comments, blog);
-  const AddComment = () => {
+  const AddComment = (e) => {
+    e.preventDefault();
     if (comment != "") {
       commentsArray.unshift({
         comment: comment,
@@ -32,13 +34,35 @@ const CommentInput = ({ user, id, blog, comments }) => {
   console.log(commentsArray);
   return (
     <div>
-      <input
-        type="text"
-        placeholder="add a comment"
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-      />
-      <button onClick={AddComment}>Add</button>
+      <form
+        onSubmit={AddComment}
+        style={{
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          marginLeft: "20px",
+        }}
+      >
+        <TextareaAutosize
+          type="text"
+          placeholder="Add to discussion"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          style={{
+            padding: "12px 12px",
+            width: "350px",
+            border: "1px solid #EBEEF0",
+
+            outline: "none",
+          }}
+        />
+        <button
+          onClick={AddComment}
+          style={{ marginLeft: "20px", height: "30px" }}
+        >
+          Add
+        </button>
+      </form>
     </div>
   );
 };
