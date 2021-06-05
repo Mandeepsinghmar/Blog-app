@@ -3,13 +3,17 @@ import { db } from "../firebase";
 import { Link } from "react-router-dom";
 import useFetchUserBlogs from "../hooks/useFetchUserBlogs";
 import Loader from "react-loader-spinner";
+import { AiOutlineComment } from "react-icons/ai";
 
 const MyBlogs = ({ user }) => {
   const { docs } = useFetchUserBlogs(user ? user : "");
 
   console.log(docs);
   return (
-    <div style={{ minHeight: "70vh", marginLeft: "200px" }}>
+    <div
+      className="user-blogs"
+      style={{ minHeight: "70vh", overflow: "hidden", marginLeft: "190px" }}
+    >
       {user ? (
         <div className="blog-list">
           {docs.length === 0 ? (
@@ -18,7 +22,9 @@ const MyBlogs = ({ user }) => {
               <Link to="/create">Click here to write your first blog</Link>
             </div>
           ) : (
-            <h1 style={{ marginLeft: "-400px" }}>Your All blogs</h1>
+            <h1 className="title" style={{ marginLeft: "-250px" }}>
+              Your All blogs
+            </h1>
           )}
 
           {docs ? (
@@ -29,8 +35,8 @@ const MyBlogs = ({ user }) => {
                 style={{
                   marginTop: "20px",
 
-                  border: "1px solid #e2e2e2",
-                  width: "600px",
+                  borderTop: "1px solid #e2e2e2",
+
                   padding: "6px 12px 0px 12px",
                   gap: "5px",
                 }}
@@ -85,6 +91,7 @@ const MyBlogs = ({ user }) => {
                     }}
                   >
                     <p
+                      className="blog-name"
                       style={{
                         fontSize: "1.3rem",
                         fontWeight: "800",
@@ -95,9 +102,46 @@ const MyBlogs = ({ user }) => {
                       {blog.blogName}{" "}
                     </p>
                     <p>{blog.blogContent.slice(`0`, 200)}...</p>
-                    <div style={{ padding: "3px 0px" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "10px",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <div
+                        style={{
+                          padding: "3px 0px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: "4px",
+                        }}
+                      >
+                        <span>
+                          {blog.comments ? blog.comments.length : "0"}{" "}
+                        </span>
+                        <span style={{ paddingTop: "4px" }}>
+                          {" "}
+                          <AiOutlineComment />
+                        </span>
+                      </div>
+                      {/* <div
+                    style={{
+                      padding: "3px 0px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "4px",
+                    }}
+                  >
+                    <span> {blog.likes ? blog.likes.length : "0"} </span>
+                    <span style={{ paddingTop: "6px" }}>
                       {" "}
-                      {blog.comments ? blog.comments.length : "0"} comments
+                      <AiOutlineHeart />
+                    </span>
+                  </div> */}
                     </div>
                   </div>
                 </Link>
@@ -125,6 +169,8 @@ const MyBlogs = ({ user }) => {
               border: "1px solid #333",
               width: "fit-content",
               padding: "6px 12px",
+              backgroundColor: "#c7ffa2",
+              marginTop: "150px",
             }}
           >
             Please login to see your blogs.

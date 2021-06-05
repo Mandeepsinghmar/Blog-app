@@ -2,6 +2,11 @@ import react, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import useFirestore from "../hooks/useFirestore";
 import Loader from "react-loader-spinner";
+import {
+  AiOutlineComment,
+  AiOutlineHeart,
+  AiTwotoneHeart,
+} from "react-icons/ai";
 
 function BlogList(user) {
   const { docs } = useFirestore("blogs");
@@ -10,12 +15,11 @@ function BlogList(user) {
     <div
       className="blog-list"
       style={{
-        marginLeft: "200px",
-        width: "600px",
+        marginLeft: "190px",
       }}
     >
       {/* <input type="text" onChange={(e) => setSearchBlog(e.target.value)} /> */}
-      <h1>Feeds - Read Javscript blogs</h1>
+      <h1 style={{ marginBottom: "20px" }}>Feeds - Read Javscript blogs</h1>
 
       {docs ? (
         docs.map((blog) => (
@@ -23,16 +27,14 @@ function BlogList(user) {
             className="blog-preview"
             key={blog.id}
             style={{
-              marginTop: "20px",
+              borderTop: "1px solid #e2e2e2",
 
-              border: "1px solid #e2e2e2",
-              width: "600px",
               padding: "6px 12px 0px 12px",
               gap: "5px",
             }}
           >
             <Link
-              className="active-link"
+              className="blog-preview"
               to={`/blog/${blog.id}`}
               style={{
                 display: "flex",
@@ -61,7 +63,13 @@ function BlogList(user) {
                   }}
                   alt=""
                 />
-                <p style={{ fontSize: "0..7rem", textTransform: "lowercase" }}>
+                <p
+                  style={{
+                    fontSize: "0..7rem",
+                    fontWeight: "600",
+                    textTransform: "lowercase",
+                  }}
+                >
                   {blog.author}
                 </p>
               </div>
@@ -76,6 +84,7 @@ function BlogList(user) {
                 }}
               >
                 <p
+                  className="blog-name"
                   style={{
                     borderRadius: "10px",
                     fontSize: "1.3rem",
@@ -87,17 +96,51 @@ function BlogList(user) {
                   {blog.blogName}{" "}
                 </p>
                 <p>{blog.blogContent.slice(`0`, 200)}...</p>
-                <div style={{ padding: "3px 0px" }}>
-                  {" "}
-                  {blog.comments ? blog.comments.length : "0"} comments
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "10px",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: "3px 0px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "4px",
+                    }}
+                  >
+                    <span>{blog.comments ? blog.comments.length : "0"} </span>
+                    <span style={{ paddingTop: "4px" }}>
+                      {" "}
+                      <AiOutlineComment />
+                    </span>
+                  </div>
+                  {/* <div
+                    style={{
+                      padding: "3px 0px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "4px",
+                    }}
+                  >
+                    <span> {blog.likes ? blog.likes.length : "0"} </span>
+                    <span style={{ paddingTop: "6px" }}>
+                      {" "}
+                      <AiOutlineHeart />
+                    </span>
+                  </div> */}
                 </div>
               </div>
             </Link>
-            {/* {blog.likes && blog.likes.length} likes{" "} */}
           </div>
         ))
       ) : (
-        <div style={{ minHeight: "50vh" }}>
+        <div style={{ minHeight: "80vh" }}>
           <Loader type="Oval" color="#f1356d" height={40} width={40} />
         </div>
       )}

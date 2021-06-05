@@ -27,7 +27,7 @@ function EditBlog({ user }) {
   const changeHandler = (e) => {
     if (user) {
       let selectedFile = e.target.files[0];
-      const types = ["image/png", "image/jpeg"];
+      const types = ["image/png", "image/jpeg", "image/jpg"];
 
       if (selectedFile && types.includes(selectedFile.type)) {
         setFile(selectedFile);
@@ -118,10 +118,17 @@ function EditBlog({ user }) {
   };
 
   return (
-    <div className="create" style={{ marginLeft: "200px" }}>
+    <div className="create" style={{ overflow: "hidden", marginLeft: "200px" }}>
       <h1 style={{ marginBottom: "20px" }}>Edit your Blog</h1>
       <form onSubmit={handleSubmit} className="form">
-        <div style={{ display: "flex", gap: "20px" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "20px",
+            overflow: "hidden",
+            width: "100%",
+          }}
+        >
           <label>
             <input type="file" name="blog-banner" onChange={changeHandler} />
             <span>Edit banner</span>
@@ -169,64 +176,59 @@ function EditBlog({ user }) {
             </div>
           )}
         </div>
-
-        <TextareaAutosize
+        <div
           style={{
-            backgroundColor: "#eef0f1",
-            borderRadius: "10px",
-            border: "1px solid #e2e2e2",
+            width: "600px",
+            overflow: "hidden",
+            margin: "5px auto",
           }}
-          className="blog-name"
-          type="text"
-          placeholder="Edit Blog name."
-          required
-          value={blogName}
-          onChange={(e) => setBlogName(e.target.value)}
-        />
-
-        <TextareaAutosize
-          style={{
-            backgroundColor: "#eef0f1",
-            borderRadius: "10px",
-            border: "1px solid #e2e2e2",
-          }}
-          placeholder="Edit your blog content "
-          required
-          value={blogContent}
-          onChange={(e) => setBlogContent(e.target.value)}
-        ></TextareaAutosize>
-        {/* <label>Article Author:</label> */}
-        {/* <input
-          type="text"
-          required
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-        /> */}
-        {user ? (
-          <button style={{ backgroundColor: "black" }}>Save changes</button>
-        ) : (
+        >
           <div
             style={{
               display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
             }}
           >
-            <p
+            <TextareaAutosize
               style={{
-                borderRadius: "2px",
-                border: "1px solid #333",
-                width: "fit-content",
-                padding: "6px 12px",
+                backgroundColor: "#eef0f1",
+                borderRadius: "10px",
+                border: "1px solid #e2e2e2",
               }}
-            >
-              Please login to write a blog.
-            </p>
+              className="blog-name"
+              type="text"
+              placeholder="Blog name"
+              required
+              value={blogName}
+              onChange={(e) => setBlogName(e.target.value)}
+            />
           </div>
-        )}
-        {/* {!isLoading && <button>Add a article</button>}
-        {pleaseLogin && <p>Please login to create a blog.</p>}
-        {isLoading && <button disabled>Adding article...</button>} */}
+
+          <div>
+            <TextareaAutosize
+              style={{
+                backgroundColor: "#eef0f1",
+                borderRadius: "10px",
+                border: "1px solid #e2e2e2",
+                padding: "12px",
+              }}
+              placeholder="write something"
+              required
+              value={blogContent}
+              onChange={(e) => setBlogContent(e.target.value)}
+            />
+          </div>
+          <div
+            className="create-blog-btn"
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            <button onClick={handleSubmit} style={{ backgroundColor: "black" }}>
+              Save changes
+            </button>
+          </div>
+        </div>{" "}
       </form>
     </div>
   );

@@ -58,7 +58,7 @@ const CommentInput = ({ user, id, blog, comments }) => {
         />
         <button
           onClick={AddComment}
-          style={{ marginLeft: "20px", height: "30px" }}
+          style={{ marginLeft: "20px", height: "35px", width: "60px" }}
         >
           Add
         </button>

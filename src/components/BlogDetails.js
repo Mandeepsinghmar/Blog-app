@@ -6,18 +6,19 @@ import { Link } from "react-router-dom";
 import Loader from "react-loader-spinner";
 import CommentInput from "./CommentInput";
 import banner from "../img/banner.jpg";
-import useUserBlogs from "../hooks/useBlogDetails";
+import useFirestore from "../hooks/useFirestore";
+
 const BlogDetails = ({ user }) => {
   const { id } = useParams();
+  const { docs } = useFirestore("blogs");
 
   const [userLikedBlog, setUserLikedBlog] = useState(false);
-  const [postedBy, setPostedBy] = useState(null);
+
   const [blog, setBlog] = useState(null);
-  const [userBlogs, setUserBlogs] = useState(null);
+
   const [loading, setLoading] = useState(false);
 
   const history = useHistory();
-  const { docs } = useUserBlogs(postedBy);
 
   useEffect(() => {
     db.collection("blogs").onSnapshot((snapshot) => {
@@ -25,11 +26,10 @@ const BlogDetails = ({ user }) => {
         if (doc.id === id) {
           let data = doc.data();
           setBlog(data);
-          setPostedBy(doc.data().postedBy);
         }
       });
     });
-  }, []);
+  }, [id]);
 
   // console.log(userBlogs);
 
@@ -45,6 +45,9 @@ const BlogDetails = ({ user }) => {
         display: "flex",
         justifyContent: "space-around",
         marginLeft: "190px",
+        gap: "20px",
+        flexWrap: "wrap",
+
         // backgroundColor: "white",
       }}
     >
@@ -55,6 +58,7 @@ const BlogDetails = ({ user }) => {
       )}
 
       <div
+        className="blog-details-container"
         style={{
           width: "600px",
           borderLeft: "1px solid #e2e2e2",
@@ -153,7 +157,11 @@ const BlogDetails = ({ user }) => {
                       <div>
                         <button>
                           <Link
-                            style={{ textDecoration: "none", color: "white" }}
+                            style={{
+                              textDecoration: "none",
+                              color: "black",
+                              fontWeight: "800",
+                            }}
                             to={`/edit/${id}`}
                           >
                             Edit
@@ -199,14 +207,13 @@ const BlogDetails = ({ user }) => {
               </p>
             </div>
 
-            {/* // {blog.likes && (
-              //   <Likes
-              //     blogId={blog.id}
-              //     user={user}
-              //     totalLikes={blog.likes.length}
-              //     likedBlog={userLikedBlog}
-              //   />
-              // )} */}
+            {/* <Likes
+              blogId={blog.id}
+              user={user}
+              totalLikes={blog.likes.length}
+              likedBlog={userLikedBlog}
+            /> */}
+
             <div>
               <CommentInput
                 blog={blog}
@@ -268,11 +275,47 @@ const BlogDetails = ({ user }) => {
             <img
               src={blog.userPicture}
               alt=""
-              style={{ borderRadius: "10px" }}
+              style={{ borderRadius: "50%" }}
             />
             <p> {blog.author}</p>
           </div>
         )}
+        <p
+          style={{ fontWeight: "600", marginTop: "30px", marginBottom: "20px" }}
+        >
+          Read more blogs
+        </p>
+        {docs
+          ? docs.slice(0, 4).map((blog) => (
+              <div>
+                <Link
+                  className="suggested-blog"
+                  to={`/blog/${blog.id}`}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textDecoration: "none",
+                    marginBottom: "10px",
+                  }}
+                >
+                  <p
+                    style={{
+                      fontSize: "1.3rem",
+                      fontWeight: "800",
+
+                      padding: "3px 0px",
+                      border: "1px solid #e2e2e2 ",
+                      width: "100%",
+                    }}
+                  >
+                    {blog.blogName}{" "}
+                  </p>
+                </Link>
+              </div>
+            ))
+          : ""}
         {/* {userBlogs
           ? userBlogs.map((blog) => {
               // console.log(blog.blogName)

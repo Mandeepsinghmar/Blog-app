@@ -3,6 +3,8 @@ import { useHistory } from "react-router-dom";
 import { db, storage, timestamp } from "../firebase";
 import TextareaAutosize from "react-autosize-textarea";
 import Loader from "react-loader-spinner";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function CreateBlog({ user }) {
   console.log(user);
@@ -22,7 +24,7 @@ function CreateBlog({ user }) {
   const changeHandler = (e) => {
     if (user) {
       let selectedFile = e.target.files[0];
-      const types = ["image/png", "image/jpeg"];
+      const types = ["image/png", "image/jpeg", "image/jpg"];
 
       if (selectedFile && types.includes(selectedFile.type)) {
         setFile(selectedFile);
@@ -78,7 +80,9 @@ function CreateBlog({ user }) {
       history.push("/");
     } else {
       e.preventDefault();
-      setPleaseLogin(true);
+      toast("You must be logged in to write!", {
+        className: "toast",
+      });
     }
   };
 
@@ -94,117 +98,132 @@ function CreateBlog({ user }) {
   };
 
   return (
-    <div className="create" style={{ marginLeft: "200px", width: "100%" }}>
-      <h1 style={{ marginBottom: "20px" }}>Create a new Blog</h1>
-      <form onSubmit={handleSubmit} className="form">
-        <div style={{ display: "flex", gap: "20px" }}>
-          <label>
-            <input type="file" name="blog-banner" onChange={changeHandler} />
-            <span>Upload banner</span>
-          </label>
-
-          {fileErr && <div>{fileErr}</div>}
-          {/* {file && <div>{file.name}</div>} */}
-          {progress && (
-            <div
-            // style={{
-            //   width: progress + "%",
-            //   marginTop: "10px",
-            //   backgroundColor: "pink",
-            //   height: "5px",
-            // }}
-            >
-              <Loader type="Oval" color="#f1356d" height={20} width={20} />
-            </div>
-          )}
-          {bannerUrl && (
-            <div style={{ display: "flex", gap: "1px" }}>
-              <img
-                src={bannerUrl}
-                style={{
-                  width: "50px",
-
-                  height: "50px",
-                  borderRadius: "10px",
-                  marginTop: "-10px",
-                }}
-                alt=""
-              />
-              <div
-                onClick={deleteBanner}
-                style={{
-                  marginTop: "-20px",
-                  fontWeight: "bold",
-                  marginLeft: "-6px",
-                  color: "red",
-                  cursor: "pointer",
-                }}
-              >
-                x
-              </div>
-            </div>
-          )}
-        </div>
-        <TextareaAutosize
-          style={{
-            backgroundColor: "#eef0f1",
-            borderRadius: "10px",
-            border: "1px solid #e2e2e2",
-          }}
-          className="blog-name"
-          type="text"
-          placeholder="Blog name"
-          required
-          value={blogName}
-          onChange={(e) => setBlogName(e.target.value)}
+    <>
+      <>
+        <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
         />
+      </>
+      <div
+        className="create"
+        style={{
+          marginBottom: "20px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <h1>Create a new Blog</h1>
+        <form onSubmit={handleSubmit} className="form">
+          <div style={{ display: "flex", gap: "20px" }}>
+            <label>
+              <input type="file" name="blog-banner" onChange={changeHandler} />
+              <span>Upload banner</span>
+            </label>
 
-        <TextareaAutosize
-          style={{
-            backgroundColor: "#eef0f1",
-            borderRadius: "10px",
-            border: "1px solid #e2e2e2",
-            padding: "12px",
-          }}
-          placeholder="write something"
-          required
-          value={blogContent}
-          onChange={(e) => setBlogContent(e.target.value)}
-        ></TextareaAutosize>
-        {/* <label>Article Author:</label> */}
-        {/* <input
-          type="text"
-          required
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-        /> */}
-        {user ? (
-          <button style={{ backgroundColor: "black" }}>Add a article</button>
-        ) : (
+            {fileErr && <div>{fileErr}</div>}
+
+            {progress && (
+              <div>
+                <Loader type="Oval" color="#f1356d" height={20} width={20} />
+              </div>
+            )}
+            {bannerUrl && (
+              <div style={{ display: "flex", gap: "1px" }}>
+                <img
+                  src={bannerUrl}
+                  style={{
+                    width: "50px",
+
+                    height: "50px",
+                    borderRadius: "10px",
+                    marginTop: "-10px",
+                  }}
+                  alt=""
+                />
+                <div
+                  onClick={deleteBanner}
+                  style={{
+                    marginTop: "-20px",
+                    fontWeight: "bold",
+                    marginLeft: "-6px",
+                    color: "red",
+                    cursor: "pointer",
+                  }}
+                >
+                  x
+                </div>
+              </div>
+            )}
+          </div>
           <div
             style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              width: "600px",
+              overflow: "hidden",
+              margin: "5px auto",
             }}
           >
-            <p
+            <div
               style={{
-                borderRadius: "2px",
-                border: "1px solid #333",
-                width: "fit-content",
-                padding: "6px 12px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-start",
+                alignItems: "flex-start",
               }}
             >
-              Please login to write a blog.
-            </p>
+              <TextareaAutosize
+                style={{
+                  backgroundColor: "#eef0f1",
+                  borderRadius: "10px",
+                  border: "1px solid #e2e2e2",
+                }}
+                className="blog-name"
+                type="text"
+                placeholder="Blog name"
+                required
+                value={blogName}
+                onChange={(e) => setBlogName(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <TextareaAutosize
+                style={{
+                  backgroundColor: "#eef0f1",
+                  borderRadius: "10px",
+                  border: "1px solid #e2e2e2",
+                  padding: "12px",
+                }}
+                placeholder="write something"
+                required
+                value={blogContent}
+                onChange={(e) => setBlogContent(e.target.value)}
+              />
+            </div>
+            <div
+              className="create-blog-btn"
+              style={{ display: "flex", justifyContent: "center" }}
+            >
+              <button
+                onClick={handleSubmit}
+                style={{ backgroundColor: "black" }}
+              >
+                Add a blog
+              </button>
+            </div>
           </div>
-        )}
-        {/* {!isLoading && <button>Add a article</button>}
-        {pleaseLogin && <p>Please login to create a blog.</p>}
-        {isLoading && <button disabled>Adding article...</button>} */}
-      </form>
-    </div>
+        </form>
+      </div>
+    </>
   );
 }
 

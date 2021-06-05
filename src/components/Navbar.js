@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { logout, logInWithGoogle } from "../services/auth";
 import "../index.css";
+import { AiFillHome } from "react-icons/ai";
+import { ImRocket } from "react-icons/im";
+import { RiZcoolFill } from "react-icons/ri";
 
 function Navbar({ user, logout, login }) {
   const [activePage, setActivePage] = useState(false);
@@ -9,48 +12,82 @@ function Navbar({ user, logout, login }) {
   return (
     <div
       className="navbar"
-      style={{ backgroundColor: "#eef0f1", marginTop: "0px", padding: "5px" }}
+      style={{
+        backgroundColor: "#eef0f1",
+        marginTop: "0px",
+        padding: "5px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "100px",
+      }}
     >
-      <h1 style={{ marginTop: "50px" }}>JS</h1>
+      <div
+        className="logo"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {" "}
+        <h1
+          style={{
+            marginTop: "30px",
+            fontSize: "1rem",
+            height: "40px",
+            width: "50px",
+          }}
+        >
+          JS
+        </h1>
+      </div>
 
       <div
         className="navbar-links"
         style={{
           display: "flex",
-          // marginTop: "30px",
+
           flexDirection: "column",
-          justifyContent: "space-around",
-          alignItems: "center",
-          gap: "30px",
         }}
       >
         {/* <div> */}
         <div
+          className="navbar_items"
           style={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            alignItems: "flex-start",
-
+            alignItems: "center",
+            // marginTop: "-300px",
             gap: "20px",
           }}
         >
           <NavLink exact className="link" activeClassName="active" to="/">
-            Home
+            <p>
+              <AiFillHome className="nav-icon" />
+            </p>
+            <p className="icon-name">Home</p>
           </NavLink>
 
           <NavLink className="link" activeClassName="active" to="/create">
-            Write blog
+            <p>
+              <ImRocket className="nav-icon" />
+            </p>
+            <p className="icon-name">Write</p>
           </NavLink>
           <NavLink activeClassName="active" className="link" to="/myblogs">
-            My blogs
+            <p>
+              <RiZcoolFill className="nav-icon" />
+            </p>
+            <p className="icon-name">Blogs</p>
           </NavLink>
         </div>
 
         {user ? (
           <div
+            className="profile-container"
             style={{
-              marginTop: "0px",
+              marginTop: "100px",
             }}
           >
             <img
@@ -59,12 +96,20 @@ function Navbar({ user, logout, login }) {
                 height: "80px",
                 width: "80px",
                 cursor: "pointer",
+                border: "2px solid white",
               }}
               src={user.photoURL}
               alt=""
               onClick={() => logout()}
             />
-            <p style={{ color: "#000", fontSize: "1.2rem" }}>
+            <p
+              style={{
+                color: "#000",
+                fontSize: "1.2rem",
+                textTransform: "lowercase",
+                fontWeight: "800",
+              }}
+            >
               {user.displayName}
             </p>
           </div>
@@ -73,14 +118,13 @@ function Navbar({ user, logout, login }) {
             <p
               className="login"
               style={{
-                marginTop: "-10px",
+                marginTop: "15px",
                 border: "0",
                 color: "#fff",
-                backgroundColor: "#f1356d",
+                backgroundColor: "#000",
                 borderRadius: "8px",
                 cursor: "pointer",
-                padding: "6px 12px",
-                marginLeft: "-12px",
+                padding: "6px ",
               }}
               onClick={() => login()}
             >
