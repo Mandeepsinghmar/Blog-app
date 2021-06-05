@@ -1,7 +1,8 @@
-import { auth, provider } from "../firebase";
+import { auth, provider, db } from "../firebase";
 
 export const logInWithGoogle = async () => {
   let user;
+
   await auth
     .signInWithPopup(provider)
     .then((res) => {
