@@ -4,6 +4,9 @@ import { db, timestamp, storage } from "../firebase";
 import TextareaAutosize from "react-autosize-textarea";
 import useFirestore from "../hooks/useFirestore";
 import Loader from "react-loader-spinner";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import ReactHtmlParser from "react-html-parser";
 
 function EditBlog({ user }) {
   const { id } = useParams();
@@ -27,7 +30,7 @@ function EditBlog({ user }) {
   const changeHandler = (e) => {
     if (user) {
       let selectedFile = e.target.files[0];
-      const types = ["image/png", "image/jpeg"];
+      const types = ["image/png", "image/jpeg", "image/jpg"];
 
       if (selectedFile && types.includes(selectedFile.type)) {
         setFile(selectedFile);
@@ -39,7 +42,11 @@ function EditBlog({ user }) {
     } else {
     }
   };
-
+  const handleChange = (e, editor) => {
+    const data = editor.getData();
+    // const parsedData = ReactHtmlParser(data);
+    setBlogContent(data);
+  };
   useEffect(() => {
     // reference on storage bucket
     if (file) {
@@ -118,13 +125,23 @@ function EditBlog({ user }) {
   };
 
   return (
-    <div className="create" style={{ marginLeft: "200px" }}>
+    <div
+      className="create"
+      style={{ overflow: "hidden", marginTop: "20px", marginLeft: "200px" }}
+    >
       <h1 style={{ marginBottom: "20px" }}>Edit your Blog</h1>
       <form onSubmit={handleSubmit} className="form">
-        <div style={{ display: "flex", gap: "20px" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "20px",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <label>
             <input type="file" name="blog-banner" onChange={changeHandler} />
-            <span>Edit banner</span>
+            <span style={{ backgroundColor: "#f9f871" }}>Edit banner</span>
           </label>
 
           {fileErr && <div>{fileErr}</div>}
@@ -169,64 +186,70 @@ function EditBlog({ user }) {
             </div>
           )}
         </div>
-
-        <TextareaAutosize
+        <div
+          className="editor"
           style={{
-            backgroundColor: "#eef0f1",
-            borderRadius: "10px",
-            border: "1px solid #e2e2e2",
+            width: "700px",
+            overflow: "hidden",
+            margin: "5px auto",
           }}
-          className="blog-name"
-          type="text"
-          placeholder="Edit Blog name."
-          required
-          value={blogName}
-          onChange={(e) => setBlogName(e.target.value)}
-        />
-
-        <TextareaAutosize
-          style={{
-            backgroundColor: "#eef0f1",
-            borderRadius: "10px",
-            border: "1px solid #e2e2e2",
-          }}
-          placeholder="Edit your blog content "
-          required
-          value={blogContent}
-          onChange={(e) => setBlogContent(e.target.value)}
-        ></TextareaAutosize>
-        {/* <label>Article Author:</label> */}
-        {/* <input
-          type="text"
-          required
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-        /> */}
-        {user ? (
-          <button style={{ backgroundColor: "black" }}>Save changes</button>
-        ) : (
+        >
           <div
             style={{
               display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
             }}
           >
-            <p
+            <TextareaAutosize
               style={{
-                borderRadius: "2px",
-                border: "1px solid #333",
-                width: "fit-content",
-                padding: "6px 12px",
+                borderRadius: "10px",
+                border: "1px solid #e2e2e2",
+                backgroundColor: "white",
               }}
-            >
-              Please login to write a blog.
-            </p>
+              className="blog-name"
+              type="text"
+              placeholder="Blog name"
+              required
+              value={blogName}
+              onChange={(e) => setBlogName(e.target.value)}
+            />
           </div>
-        )}
-        {/* {!isLoading && <button>Add a article</button>}
-        {pleaseLogin && <p>Please login to create a blog.</p>}
-        {isLoading && <button disabled>Adding article...</button>} */}
+
+          {/* <div>
+              <TextareaAutosize
+                style={{
+                  backgroundColor: "#eef0f1",
+                  borderRadius: "10px",
+                  border: "1px solid #e2e2e2",
+                  padding: "12px",
+                }}
+                placeholder="write something"
+                required
+                value={blogContent}
+                onChange={(e) => setBlogContent(e.target.value)}
+              />
+            </div> */}
+
+          <CKEditor
+            editor={ClassicEditor}
+            data={blogContent}
+            onChange={handleChange}
+          />
+          <div
+            className="create-blog-btn"
+            style={{
+              marginTop: "20px",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <button onClick={handleSubmit} style={{ backgroundColor: "black" }}>
+              Save changes
+            </button>
+          </div>
+        </div>{" "}
       </form>
     </div>
   );

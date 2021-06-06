@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { AiOutlineHeart } from "react-icons/ai";
 import { db, FieldValue } from "../firebase";
 
 const Likes = ({ blogId, user, totalLikes, likedBlog }) => {
@@ -23,16 +24,15 @@ const Likes = ({ blogId, user, totalLikes, likedBlog }) => {
   };
   return (
     <div>
-      <p
+      <AiOutlineHeart
         style={{
           color: toggleLiked ? "red" : "blue",
           fontWeight: "bold",
           cursor: "pointer",
         }}
         onClick={handleToggleLiked}
-      >
-        like {totalLikes}
-      </p>
+      />
+      <span>{totalLikes}</span>
     </div>
   );
 };

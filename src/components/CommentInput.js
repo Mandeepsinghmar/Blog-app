@@ -1,41 +1,67 @@
 import React, { useState } from "react";
 import TextareaAutosize from "react-autosize-textarea/lib";
 import { db, timestamp } from "../firebase";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const CommentInput = ({ user, id, blog, comments }) => {
+const CommentInput = ({ user, id, comments }) => {
   const [comment, setComment] = useState("");
   const [commentsArray, setCommentsArray] = useState(comments ? comments : []);
 
-  console.log(id, user, comments, blog);
+  console.log(id, user, comments);
   const AddComment = (e) => {
     e.preventDefault();
-    if (comment != "") {
-      commentsArray.unshift({
-        comment: comment,
-        displayName: user.displayName,
-        photoUrl: user.photoURL,
-        userId: user.uid,
-      });
-      db.collection("blogs")
-        .doc(id)
-
-        .update({
-          comments: commentsArray,
-        })
-        .then(() => {
-          console.log("commented successful");
-        })
-        .catch((err) => {
-          console.log(err.message);
+    if (user) {
+      if (comment != "") {
+        commentsArray.unshift({
+          comment: comment,
+          displayName: user.displayName,
+          photoUrl: user.photoURL,
+          userId: user.uid,
         });
-      setComment("");
+        db.collection("blogs")
+          .doc(id)
+
+          .update({
+            comments: commentsArray,
+          })
+          .then(() => {
+            console.log("commented successful");
+          })
+          .catch((err) => {
+            console.log(err.message);
+          });
+        setComment("");
+      } else {
+        toast("Please add something to discussion!", {
+          className: "toast",
+        });
+      }
+    } else {
+      toast("You must be logged in to join the discussion!", {
+        className: "toast",
+      });
     }
   };
   console.log(commentsArray);
   return (
     <div>
+      <>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </>
       <form
         onSubmit={AddComment}
+        className="commentInput"
         style={{
           display: "flex",
           justifyContent: "flex-start",
@@ -44,6 +70,7 @@ const CommentInput = ({ user, id, blog, comments }) => {
         }}
       >
         <TextareaAutosize
+          className="textarea"
           type="text"
           placeholder="Add to discussion"
           value={comment}
@@ -58,7 +85,7 @@ const CommentInput = ({ user, id, blog, comments }) => {
         />
         <button
           onClick={AddComment}
-          style={{ marginLeft: "20px", height: "30px" }}
+          style={{ marginLeft: "20px", height: "35px", width: "60px" }}
         >
           Add
         </button>
