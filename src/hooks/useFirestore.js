@@ -11,7 +11,11 @@ const useFirestore = (collection) => {
       .onSnapshot((snapshot) => {
         let documents = [];
         snapshot.forEach((doc) => {
-          documents.push({ ...doc.data(), id: doc.id });
+          const wpm = 225;
+          const text = doc.data().blogContent;
+          const words = text.trim().split(/\s+/).length;
+          const time = Math.ceil(words / wpm);
+          documents.push({ ...doc.data(), id: doc.id, readingTime: time });
         });
 
         setDocs(documents);

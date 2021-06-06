@@ -13,10 +13,12 @@ const useFetchUserBlogs = (user) => {
           let documents = [];
           snapshot.forEach((doc) => {
             const data = doc.data();
-            console.log(data.postedBy);
-            console.log(user.uid);
+            const wpm = 225;
+            const text = doc.data().blogContent;
+            const words = text.trim().split(/\s+/).length;
+            const time = Math.ceil(words / wpm);
             if (data.postedBy === user.uid) {
-              documents.push({ ...doc.data(), id: doc.id });
+              documents.push({ ...doc.data(), id: doc.id, readingTime: time });
             }
           });
           setDocs(documents);

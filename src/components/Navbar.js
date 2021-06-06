@@ -33,8 +33,8 @@ function Navbar({ user, logout, login }) {
         <h1
           style={{
             marginTop: "30px",
-            fontSize: "1rem",
-            height: "40px",
+
+            height: "50px",
             width: "50px",
           }}
         >
@@ -79,7 +79,7 @@ function Navbar({ user, logout, login }) {
             <p>
               <RiZcoolFill className="nav-icon" />
             </p>
-            <p className="icon-name">Blogs</p>
+            <p className="icon-name">Profile</p>
           </NavLink>
         </div>
 
@@ -125,10 +125,11 @@ function Navbar({ user, logout, login }) {
                 borderRadius: "8px",
                 cursor: "pointer",
                 padding: "6px ",
+                fontSize: "1rem",
               }}
               onClick={() => login()}
             >
-              Sign In
+              Log In
             </p>
           </div>
         )}

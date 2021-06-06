@@ -5,6 +5,9 @@ import TextareaAutosize from "react-autosize-textarea";
 import Loader from "react-loader-spinner";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import ReactHtmlParser from "react-html-parser";
 
 function CreateBlog({ user }) {
   console.log(user);
@@ -20,6 +23,7 @@ function CreateBlog({ user }) {
   const [UploadErr, setUploadErr] = useState(null);
   const [progress, setProgress] = useState(null);
   const [loader, setLoader] = useState(null);
+  const [addData, setAddData] = useState("");
 
   const changeHandler = (e) => {
     if (user) {
@@ -35,6 +39,13 @@ function CreateBlog({ user }) {
       }
     } else {
     }
+  };
+
+  const handleChange = (e, editor) => {
+    const data = editor.getData();
+    // const parsedData = ReactHtmlParser(data);
+    setBlogContent(data);
+    console.log(data);
   };
 
   useEffect(() => {
@@ -58,7 +69,8 @@ function CreateBlog({ user }) {
       );
     }
   }, [file]);
-
+  // const content = ReactHtmlParser(blogContent);
+  // console.log(content);
   const handleSubmit = (e) => {
     if (user) {
       e.preventDefault();
@@ -67,17 +79,23 @@ function CreateBlog({ user }) {
       const author = user.displayName;
       const userId = user.uid;
 
-      db.collection("blogs").add({
-        postedBy: userId,
-        // user,
-        blogName,
-        author,
-        blogContent,
-        createdAt,
-        bannerUrl,
-        userPicture,
-      });
-      history.push("/");
+      if (blogName != "" && blogContent != "") {
+        db.collection("blogs").add({
+          postedBy: userId,
+          // user,
+          blogName,
+          author,
+          blogContent,
+          createdAt,
+          bannerUrl,
+          userPicture,
+        });
+        history.push("/");
+      } else {
+        toast("Please add something to blog!", {
+          className: "toast",
+        });
+      }
     } else {
       e.preventDefault();
       toast("You must be logged in to write!", {
@@ -102,7 +120,7 @@ function CreateBlog({ user }) {
       <>
         <ToastContainer
           position="top-right"
-          autoClose={2000}
+          autoClose={3000}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick
@@ -124,10 +142,17 @@ function CreateBlog({ user }) {
       >
         <h1>Create a new Blog</h1>
         <form onSubmit={handleSubmit} className="form">
-          <div style={{ display: "flex", gap: "20px" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: "20px",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <label>
               <input type="file" name="blog-banner" onChange={changeHandler} />
-              <span>Upload banner</span>
+              <span style={{ backgroundColor: "#f9f871" }}>Upload banner</span>
             </label>
 
             {fileErr && <div>{fileErr}</div>}
@@ -138,36 +163,36 @@ function CreateBlog({ user }) {
               </div>
             )}
             {bannerUrl && (
-              <div style={{ display: "flex", gap: "1px" }}>
+              <div style={{ display: "flex", gap: "5px" }}>
                 <img
                   src={bannerUrl}
                   style={{
-                    width: "50px",
-
-                    height: "50px",
+                    height: "60px",
+                    width: "60px",
                     borderRadius: "10px",
-                    marginTop: "-10px",
                   }}
                   alt=""
                 />
-                <div
+                <span
                   onClick={deleteBanner}
                   style={{
-                    marginTop: "-20px",
                     fontWeight: "bold",
-                    marginLeft: "-6px",
+
                     color: "red",
                     cursor: "pointer",
+                    marginTop: "-10px",
+                    marginLeft: "-10px",
                   }}
                 >
                   x
-                </div>
+                </span>
               </div>
             )}
           </div>
           <div
+            className="editor"
             style={{
-              width: "600px",
+              width: "700px",
               overflow: "hidden",
               margin: "5px auto",
             }}
@@ -182,9 +207,9 @@ function CreateBlog({ user }) {
             >
               <TextareaAutosize
                 style={{
-                  backgroundColor: "#eef0f1",
                   borderRadius: "10px",
                   border: "1px solid #e2e2e2",
+                  backgroundColor: "white",
                 }}
                 className="blog-name"
                 type="text"
@@ -195,23 +220,19 @@ function CreateBlog({ user }) {
               />
             </div>
 
-            <div>
-              <TextareaAutosize
-                style={{
-                  backgroundColor: "#eef0f1",
-                  borderRadius: "10px",
-                  border: "1px solid #e2e2e2",
-                  padding: "12px",
-                }}
-                placeholder="write something"
-                required
-                value={blogContent}
-                onChange={(e) => setBlogContent(e.target.value)}
-              />
-            </div>
+            <CKEditor
+              editor={ClassicEditor}
+              data={blogContent}
+              onChange={handleChange}
+            />
+
             <div
               className="create-blog-btn"
-              style={{ display: "flex", justifyContent: "center" }}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "20px",
+              }}
             >
               <button
                 onClick={handleSubmit}

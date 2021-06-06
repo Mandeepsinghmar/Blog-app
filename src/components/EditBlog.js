@@ -4,6 +4,9 @@ import { db, timestamp, storage } from "../firebase";
 import TextareaAutosize from "react-autosize-textarea";
 import useFirestore from "../hooks/useFirestore";
 import Loader from "react-loader-spinner";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import ReactHtmlParser from "react-html-parser";
 
 function EditBlog({ user }) {
   const { id } = useParams();
@@ -39,7 +42,11 @@ function EditBlog({ user }) {
     } else {
     }
   };
-
+  const handleChange = (e, editor) => {
+    const data = editor.getData();
+    // const parsedData = ReactHtmlParser(data);
+    setBlogContent(data);
+  };
   useEffect(() => {
     // reference on storage bucket
     if (file) {
@@ -118,20 +125,23 @@ function EditBlog({ user }) {
   };
 
   return (
-    <div className="create" style={{ overflow: "hidden", marginLeft: "200px" }}>
+    <div
+      className="create"
+      style={{ overflow: "hidden", marginTop: "20px", marginLeft: "200px" }}
+    >
       <h1 style={{ marginBottom: "20px" }}>Edit your Blog</h1>
       <form onSubmit={handleSubmit} className="form">
         <div
           style={{
             display: "flex",
             gap: "20px",
-            overflow: "hidden",
-            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <label>
             <input type="file" name="blog-banner" onChange={changeHandler} />
-            <span>Edit banner</span>
+            <span style={{ backgroundColor: "#f9f871" }}>Edit banner</span>
           </label>
 
           {fileErr && <div>{fileErr}</div>}
@@ -177,8 +187,9 @@ function EditBlog({ user }) {
           )}
         </div>
         <div
+          className="editor"
           style={{
-            width: "600px",
+            width: "700px",
             overflow: "hidden",
             margin: "5px auto",
           }}
@@ -193,9 +204,9 @@ function EditBlog({ user }) {
           >
             <TextareaAutosize
               style={{
-                backgroundColor: "#eef0f1",
                 borderRadius: "10px",
                 border: "1px solid #e2e2e2",
+                backgroundColor: "white",
               }}
               className="blog-name"
               type="text"
@@ -206,23 +217,33 @@ function EditBlog({ user }) {
             />
           </div>
 
-          <div>
-            <TextareaAutosize
-              style={{
-                backgroundColor: "#eef0f1",
-                borderRadius: "10px",
-                border: "1px solid #e2e2e2",
-                padding: "12px",
-              }}
-              placeholder="write something"
-              required
-              value={blogContent}
-              onChange={(e) => setBlogContent(e.target.value)}
-            />
-          </div>
+          {/* <div>
+              <TextareaAutosize
+                style={{
+                  backgroundColor: "#eef0f1",
+                  borderRadius: "10px",
+                  border: "1px solid #e2e2e2",
+                  padding: "12px",
+                }}
+                placeholder="write something"
+                required
+                value={blogContent}
+                onChange={(e) => setBlogContent(e.target.value)}
+              />
+            </div> */}
+
+          <CKEditor
+            editor={ClassicEditor}
+            data={blogContent}
+            onChange={handleChange}
+          />
           <div
             className="create-blog-btn"
-            style={{ display: "flex", justifyContent: "center" }}
+            style={{
+              marginTop: "20px",
+              display: "flex",
+              justifyContent: "center",
+            }}
           >
             <button onClick={handleSubmit} style={{ backgroundColor: "black" }}>
               Save changes

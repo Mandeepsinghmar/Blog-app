@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import useFetchUserBlogs from "../hooks/useFetchUserBlogs";
 import Loader from "react-loader-spinner";
 import { AiOutlineComment } from "react-icons/ai";
+import ReactHtmlParser from "react-html-parser";
+import moment from "moment";
 
 const MyBlogs = ({ user }) => {
   const { docs } = useFetchUserBlogs(user ? user : "");
@@ -16,16 +18,32 @@ const MyBlogs = ({ user }) => {
     >
       {user ? (
         <div className="blog-list">
-          {docs.length === 0 ? (
-            <div>
-              <h1>You haven't write any blog.</h1>
-              <Link to="/create">Click here to write your first blog</Link>
-            </div>
-          ) : (
-            <h1 className="title" style={{ marginLeft: "-250px" }}>
-              Your All blogs
-            </h1>
-          )}
+          <div>
+            <img
+              src={user.photoURL}
+              style={{ borderRadius: "3px", height: "90px", width: "90px" }}
+              alt=""
+            />
+            <p style={{ fontWeight: "600" }}>{user.displayName}</p>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+              marginLeft: "30px",
+            }}
+          >
+            {docs.length === 0 ? (
+              <div>
+                <h1>You haven't write any blog.</h1>
+                <Link to="/create">Click here to write your first blog</Link>
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
 
           {docs ? (
             docs.map((blog) => (
@@ -39,28 +57,23 @@ const MyBlogs = ({ user }) => {
 
                   padding: "6px 12px 0px 12px",
                   gap: "5px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                  textDecoration: "none",
                 }}
               >
-                <Link
-                  className="active-link"
-                  to={`/blog/${blog.id}`}
+                <div
                   style={{
                     display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start",
-                    textDecoration: "none",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "5px",
                   }}
+                  key={blog.id}
                 >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap: "5px",
-                    }}
-                    key={blog.id}
-                  >
+                  <Link to={`blogs/${blog.postedBy}`}>
                     {" "}
                     <img
                       src={blog.userPicture}
@@ -71,23 +84,63 @@ const MyBlogs = ({ user }) => {
                       }}
                       alt=""
                     />
-                    <p
-                      style={{
-                        fontSize: "0..7rem",
-                        textTransform: "lowercase",
-                      }}
-                    >
-                      {blog.author}
-                    </p>
-                  </div>
+                  </Link>
                   <div
                     style={{
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "flex-start",
                       alignItems: "flex-start",
-                      paddingLeft: "30px",
-                      marginTop: "5px",
+                    }}
+                  >
+                    {" "}
+                    <Link to={`blogs/${blog.postedBy}`}>
+                      <p
+                        className="author-name"
+                        style={{
+                          fontSize: "17px",
+                          fontWeight: "600",
+                          textTransform: "lowercase",
+                        }}
+                      >
+                        {blog.author}
+                      </p>
+                    </Link>
+                    {blog.createdAt && (
+                      <div style={{ fontSize: "10px", fontWeight: "600" }}>
+                        <span>
+                          {moment(blog.createdAt.toDate()).format("MMM D")}{" "}
+                        </span>
+                        <span>
+                          (
+                          {moment(blog.createdAt.toDate())
+                            .startOf("ss")
+                            .fromNow()}
+                          )
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    alignItems: "flex-start",
+                    paddingLeft: "30px",
+                    marginTop: "5px",
+                  }}
+                >
+                  <Link
+                    className="active-link"
+                    to={`/blog/${blog.id}`}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "flex-start",
+                      alignItems: "flex-start",
+                      textDecoration: "none",
                     }}
                   >
                     <p
@@ -101,33 +154,35 @@ const MyBlogs = ({ user }) => {
                     >
                       {blog.blogName}{" "}
                     </p>
-                    <p>{blog.blogContent.slice(`0`, 200)}...</p>
+                    <p>
+                      {ReactHtmlParser(blog.blogContent.slice(`0`, 200))}...
+                    </p>
+                  </Link>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
                     <div
                       style={{
+                        padding: "3px 0px",
                         display: "flex",
-                        gap: "10px",
                         justifyContent: "center",
                         alignItems: "center",
+                        gap: "4px",
+                        fontSize: "14px",
                       }}
                     >
-                      <div
-                        style={{
-                          padding: "3px 0px",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          gap: "4px",
-                        }}
-                      >
-                        <span>
-                          {blog.comments ? blog.comments.length : "0"}{" "}
-                        </span>
-                        <span style={{ paddingTop: "4px" }}>
-                          {" "}
-                          <AiOutlineComment />
-                        </span>
-                      </div>
-                      {/* <div
+                      <span>{blog.comments ? blog.comments.length : "0"} </span>
+                      <span style={{ paddingTop: "4px" }}>
+                        {" "}
+                        <AiOutlineComment />
+                      </span>
+                    </div>
+                    {/* <div
                     style={{
                       padding: "3px 0px",
                       display: "flex",
@@ -142,16 +197,20 @@ const MyBlogs = ({ user }) => {
                       <AiOutlineHeart />
                     </span>
                   </div> */}
+                    <div>
+                      <p style={{ fontSize: "10px" }}>
+                        {blog.readingTime} min Read
+                      </p>
                     </div>
                   </div>
-                </Link>
+                </div>
+
                 {/* {blog.likes && blog.likes.length} likes{" "} */}
               </div>
             ))
           ) : (
             <div style={{ minHeight: "50vh" }}>
-              <Loader type="Oval" color="#f1356d" height={40} width={40} />
-              Loading 🏀🥎
+              <Loader type="Oval" color="blue" height={370} width={30} />
             </div>
           )}
         </div>
@@ -173,7 +232,7 @@ const MyBlogs = ({ user }) => {
               marginTop: "150px",
             }}
           >
-            Please login to see your blogs.
+            Please login to see your profile.
           </p>
         </div>
       )}

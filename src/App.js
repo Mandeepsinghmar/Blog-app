@@ -13,14 +13,17 @@ import { logInWithGoogle, logout } from "./services/auth";
 import { db, auth } from "./firebase";
 import BlogList from "./components/BlogList";
 import EditBlog from "./components/EditBlog";
-import EditUserProfile from "./components/EditUserProfile";
+
+import AllUsersBlogs from "./components/AllUsersBlogs";
 const App = () => {
   const [user, setUser] = useState(null);
+
   const loginBtnClick = async () => {
     const data = await logInWithGoogle();
 
     if (data) {
       setUser(data);
+
       localStorage.setItem("user", JSON.stringify(data));
     }
   };
@@ -66,11 +69,14 @@ const App = () => {
               <BlogDetails user={user} />
               {/* <BlogDetails /> */}
             </Route>
+            <Route exact path="/blogs/:id">
+              <AllUsersBlogs />
+            </Route>
+            <Route exact path="/blog/blogs/:id">
+              <AllUsersBlogs />
+            </Route>
             <Route exact path="/edit/:id">
               <EditBlog user={user} setUser={setUser} />
-            </Route>
-            <Route exact path="/editprofile/:id">
-              <EditUserProfile user={user} />
             </Route>
 
             <Route path="*">
