@@ -129,7 +129,9 @@ function EditBlog({ user }) {
       className="create"
       style={{ overflow: "hidden", marginTop: "20px", marginLeft: "200px" }}
     >
-      <h1 style={{ marginBottom: "20px" }}>Edit your Blog</h1>
+      <h1 style={{ marginBottom: "20px", fontSize: "1.5rem" }}>
+        Edit your Blog
+      </h1>
       <form onSubmit={handleSubmit} className="form">
         <div
           style={{

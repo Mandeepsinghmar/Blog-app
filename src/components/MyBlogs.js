@@ -19,7 +19,16 @@ const MyBlogs = ({ user }) => {
     >
       {user ? (
         <div className="blog-list">
-          <div className="profile">
+          <div
+            className="profile"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+              alignItems: "center",
+              marginLeft: "240px",
+            }}
+          >
             <img
               src={user.photoURL}
               style={{ borderRadius: "3px", height: "90px", width: "90px" }}

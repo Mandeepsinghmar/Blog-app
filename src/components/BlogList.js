@@ -1,16 +1,25 @@
 import react, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import useFirestore from "../hooks/useFirestore";
+
 import Loader from "react-loader-spinner";
-import {
-  AiOutlineComment,
-  AiOutlineHeart,
-  AiTwotoneHeart,
-} from "react-icons/ai";
+import { AiOutlineComment } from "react-icons/ai";
 import ReactHtmlParser from "react-html-parser";
 import moment from "moment";
 
-function BlogList({ user, docs, heading }) {
+function BlogList({ docs, heading }) {
+  const [search, setSearch] = useState("");
+  const filtered = (docs) => {
+    return (
+      docs &&
+      docs.filter(
+        (item) =>
+          item.blogName.toLowerCase().includes(search) ||
+          item.blogContent.toLowerCase().includes(search)
+      )
+    );
+  };
+  const filteredData = filtered(docs);
+
   return (
     <div
       className="blog-list"
@@ -18,12 +27,36 @@ function BlogList({ user, docs, heading }) {
         marginLeft: "190px",
       }}
     >
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <h1 style={{ marginBottom: "20px" }}>{heading}</h1>
+      <div
+        className="search-container"
+        style={{
+          display: "flex",
+          margin: "10px",
+          justifyContent: "space-between",
+        }}
+      >
+        <h1 style={{ marginBottom: "20px", fontSize: "1.5rem" }}>{heading}</h1>
+        <input
+          style={{
+            width: "300px",
+            height: "40px",
+            borderRadius: "20px",
+            border: "1px solid #e2e2e2",
+            padding: "0px 12px",
+            outline: "none",
+            backgroundColor: "#eef0f1",
+            marginRight: "10px",
+            fontSize: "0.8rem",
+          }}
+          type="text"
+          placeholder="search blogs"
+          value={search}
+          onChange={(e) => setSearch(e.target.value.toLowerCase())}
+        />
       </div>
 
-      {docs ? (
-        docs.map((blog) => (
+      {filteredData ? (
+        filteredData.map((blog) => (
           <div
             className="blog-preview"
             key={blog.id}
@@ -71,7 +104,7 @@ function BlogList({ user, docs, heading }) {
                   <p
                     className="author-name"
                     style={{
-                      fontSize: "17px",
+                      fontSize: "16px",
                       fontWeight: "600",
                       textTransform: "lowercase",
                     }}
@@ -80,11 +113,11 @@ function BlogList({ user, docs, heading }) {
                   </p>
                 </Link>
                 {blog.createdAt && (
-                  <div style={{ fontSize: "10px", fontWeight: "600" }}>
-                    <span>
+                  <div style={{ fontSize: "5px", fontWeight: "600" }}>
+                    <span style={{ fontSize: "0.6rem" }}>
                       {moment(blog.createdAt.toDate()).format("MMM D")}{" "}
                     </span>
-                    <span>
+                    <span style={{ fontSize: "0.6rem" }}>
                       ({moment(blog.createdAt.toDate()).startOf("ss").fromNow()}
                       )
                     </span>
@@ -151,21 +184,7 @@ function BlogList({ user, docs, heading }) {
                     <AiOutlineComment />
                   </span>
                 </div>
-                {/* <div
-                    style={{
-                      padding: "3px 0px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap: "4px",
-                    }}
-                  >
-                    <span> {blog.likes ? blog.likes.length : "0"} </span>
-                    <span style={{ paddingTop: "6px" }}>
-                      {" "}
-                      <AiOutlineHeart />
-                    </span>
-                  </div> */}
+
                 <div>
                   <p style={{ fontSize: "10px" }}>
                     {blog.readingTime} min Read

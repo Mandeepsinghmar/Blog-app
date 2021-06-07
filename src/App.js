@@ -2,16 +2,14 @@ import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import MyBlogs from "./components/MyBlogs";
-import "./App.css";
-import CreateBlog from "./components/CreateBlog";
+
+import CreateBlog from "./components/CreateBlog/index.js";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import BlogDetails from "./components/BlogDetails";
 import NotFound from "./components/NotFound";
 import { logInWithGoogle, logout } from "./services/auth";
-// import { UserContextProvider } from "./contexts/user";
-import { db, auth } from "./firebase";
-import BlogList from "./components/BlogList";
+
 import EditBlog from "./components/EditBlog";
 
 import AllUsersBlogs from "./components/AllUsersBlogs";

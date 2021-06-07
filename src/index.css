@@ -6,7 +6,7 @@
   font-family: "Quicksand";
   color: #333;
   box-sizing: border-box;
-  /* font-size: 20px; */
+  font-size: 16px;
   line-height: 1.3;
 }
 body {
@@ -74,6 +74,18 @@ label span {
   gap: 10px !important;
   justify-content: space-between;
 }
+.profile-container {
+  position: relative;
+}
+.logout {
+  position: absolute;
+  left: 150px;
+  bottom: 90px;
+  background-color: black;
+  color: white;
+  padding: 6px 12px;
+  cursor: pointer;
+}
 @media screen and (max-width: 1030px) {
   .blog-details {
     flex-direction: column !important;
@@ -84,6 +96,11 @@ label span {
   }
   .blog-details-container {
     width: 100% !important;
+  }
+  .profile {
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-left: 0px !important;
   }
 }
 .active {
@@ -131,70 +148,14 @@ label span {
 .link-active:active {
   border: 2px solid #f1356d;
 }
-
-/* create new blog form */
-.create {
-  overflow: hidden;
-  /* width: 600px;
-  margin: auto; */
-  margin-left: 200px;
-}
-.create label {
-  text-align: left;
-  display: block;
-}
-.create h2 {
-  font-size: 20px;
-  color: #f1356d;
-  margin-bottom: 30px;
-}
-.toast {
-  margin-top: 50px;
-  width: 300px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.create textarea {
-  width: 100%;
-  /* height: 130px; */
-  height: auto;
-  padding: 6px 10px;
-  margin: 10px 0;
-  /* border: 1px solid #ddd; */
-  border: none;
-
-  box-sizing: border-box;
-  display: block;
-  overflow: hidden;
-  outline: none;
-  font-size: 1.2rem;
+.search-container input:focus {
+  border: 1px solid #e2e2e2 !important;
+  background-color: white !important;
+  /* color: white; */
 }
 
-.create .blog-name {
-  overflow: hidden;
-  width: 100%;
-  height: auto;
-  padding: 6px 10px;
-  margin: 10px 0;
-  font-size: 2rem;
-  /* border: 1px solid #ddd; */
-  border: none;
-  box-sizing: border-box;
-  display: block;
-  outline: none;
-}
-.create button {
-  width: 200px;
-  background: #f1356d;
-  color: #fff;
-  border: 0;
-  padding: 8px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-.editProfile input {
-  width: 100%;
-  padding: 6px;
+.not-found {
+  margin-top: 110px;
 }
 @media screen and (max-width: 600px) {
   .navbar {
@@ -249,11 +210,17 @@ label span {
   .login {
     margin-top: 0px !important;
   }
+  .logout {
+    top: 20px;
+    left: 180px;
+    bottom: 515px;
+  }
   .blog-list {
     margin-left: 0px !important;
   }
   .profile {
     margin-top: 90px;
+    margin-left: 60px !important;
   }
   .blogs {
     margin-top: 100px;
@@ -316,5 +283,12 @@ label span {
 @media screen and (max-width: 550px) {
   .editor {
     width: 300px !important;
+  }
+}
+@media screen and (max-width: 900px) {
+  .search-container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 }
