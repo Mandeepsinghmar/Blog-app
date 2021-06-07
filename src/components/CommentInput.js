@@ -81,6 +81,7 @@ const CommentInput = ({ user, id, comments }) => {
             border: "1px solid #EBEEF0",
 
             outline: "none",
+            fontSize: "0.9rem",
           }}
         />
         <button

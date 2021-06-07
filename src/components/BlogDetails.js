@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router";
 import { db } from "../firebase";
-import Likes from "./Likes";
+
 import { Link } from "react-router-dom";
 import Loader from "react-loader-spinner";
 import CommentInput from "./CommentInput";
@@ -13,8 +13,6 @@ import moment from "moment";
 const BlogDetails = ({ user }) => {
   const { id } = useParams();
   const { docs } = useFirestore("blogs");
-
-  const [userLikedBlog, setUserLikedBlog] = useState(false);
 
   const [blog, setBlog] = useState(null);
 
@@ -38,8 +36,6 @@ const BlogDetails = ({ user }) => {
       });
     });
   }, [id]);
-
-  // console.log(userBlogs);
 
   const deleteBlog = () => {
     db.collection("blogs").doc(id).delete();
@@ -155,7 +151,7 @@ const BlogDetails = ({ user }) => {
                       style={{
                         fontWeight: "bold",
                         marginTop: "-5px",
-                        fontSize: "1.2rem",
+                        fontSize: "1.1rem",
                         marginLeft: "8px",
                       }}
                     >
@@ -172,11 +168,11 @@ const BlogDetails = ({ user }) => {
                         marginTop: "2px",
                       }}
                     >
-                      <span>
+                      <span style={{ fontSize: "0.6rem" }}>
                         {moment(blog.createdAt.toDate()).format("MMM D")}
                         {"  "}
                       </span>
-                      <span style={{ marginLeft: "3px" }}>
+                      <span style={{ marginLeft: "3px", fontSize: "0.6rem" }}>
                         {" "}
                         • {readingTime} min Read
                       </span>
@@ -248,13 +244,6 @@ const BlogDetails = ({ user }) => {
                 {ReactHtmlParser(blog.blogContent)}
               </p>
             </div>
-
-            {/* <Likes
-              blogId={blog.id}
-              user={user}
-              totalLikes={blog.likes.length}
-              likedBlog={userLikedBlog}
-            /> */}
 
             <div>
               <CommentInput

@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { logout, logInWithGoogle } from "../services/auth";
+import { NavLink } from "react-router-dom";
+
 import "../index.css";
 import { AiFillHome } from "react-icons/ai";
 import { ImRocket } from "react-icons/im";
 import { RiZcoolFill } from "react-icons/ri";
 
 function Navbar({ user, logout, login }) {
-  const [activePage, setActivePage] = useState(false);
-
+  const [toggled, setToggled] = useState(false);
+  const handleClicked = () => {
+    logout();
+    setToggled(false);
+  };
   return (
     <div
       className="navbar"
@@ -36,6 +39,7 @@ function Navbar({ user, logout, login }) {
 
             height: "50px",
             width: "50px",
+            fontSize: "1.5rem",
           }}
         >
           JS
@@ -84,35 +88,44 @@ function Navbar({ user, logout, login }) {
         </div>
 
         {user ? (
-          <div
-            className="profile-container"
-            style={{
-              marginTop: "100px",
-            }}
-          >
-            <img
+          <>
+            <div
+              className="profile-container"
               style={{
-                borderRadius: "50%",
-                height: "80px",
-                width: "80px",
-                cursor: "pointer",
-                border: "2px solid white",
-              }}
-              src={user.photoURL}
-              alt=""
-              onClick={() => logout()}
-            />
-            <p
-              style={{
-                color: "#000",
-                fontSize: "1.2rem",
-                textTransform: "lowercase",
-                fontWeight: "800",
+                marginTop: "100px",
               }}
             >
-              {user.displayName}
-            </p>
-          </div>
+              <img
+                style={{
+                  borderRadius: "50%",
+                  height: "80px",
+                  width: "80px",
+                  cursor: "pointer",
+                  border: "2px solid white",
+                }}
+                src={user.photoURL}
+                alt=""
+                onClick={() => setToggled(!toggled)}
+              />
+              <p
+                style={{
+                  color: "#000",
+                  fontSize: "1.2rem",
+                  textTransform: "lowercase",
+                  fontWeight: "800",
+                }}
+              >
+                {user.displayName}
+              </p>
+            </div>
+            {toggled && (
+              <div>
+                <p className="logout" onClick={handleClicked}>
+                  Logout
+                </p>
+              </div>
+            )}
+          </>
         ) : (
           <div>
             <p
