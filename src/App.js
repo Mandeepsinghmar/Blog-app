@@ -15,6 +15,7 @@ import BlogList from "./components/BlogList";
 import EditBlog from "./components/EditBlog";
 
 import AllUsersBlogs from "./components/AllUsersBlogs";
+import Home from "./components/Home";
 const App = () => {
   const [user, setUser] = useState(null);
 
@@ -47,7 +48,7 @@ const App = () => {
 
   return (
     <Router>
-      <div className="app">
+      <div className="app" style={{ textAlign: "center" }}>
         <Navbar user={user} login={loginBtnClick} logout={logoutBtnClick} />
         {/* <button onClick={logInBtnClick}>login</button> */}
         <div className="content">
@@ -55,7 +56,7 @@ const App = () => {
           <Switch>
             <Route exact path="/">
               {/* <BlogList blogs={blogs} user={user} /> */}
-              <BlogList user={user} />
+              <Home user={user} />
             </Route>
 
             <Route exact path="/create">

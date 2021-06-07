@@ -251,8 +251,12 @@ label span {
   }
   .blog-list {
     margin-left: 0px !important;
-    padding: 10px;
-    margin-top: 80px;
+  }
+  .profile {
+    margin-top: 90px;
+  }
+  .blogs {
+    margin-top: 100px;
   }
   .icon-name {
     display: none;
@@ -275,7 +279,6 @@ label span {
 
   .user-blogs {
     margin-left: 0px !important;
-    padding: 20px;
   }
   .user-blogs .title {
     margin-left: 0px !important;

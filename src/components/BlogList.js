@@ -10,9 +10,7 @@ import {
 import ReactHtmlParser from "react-html-parser";
 import moment from "moment";
 
-function BlogList(user) {
-  const { docs } = useFirestore("blogs");
-
+function BlogList({ user, docs, heading }) {
   return (
     <div
       className="blog-list"
@@ -20,8 +18,9 @@ function BlogList(user) {
         marginLeft: "190px",
       }}
     >
-      {/* <input type="text" onChange={(e) => setSearchBlog(e.target.value)} /> */}
-      <h1 style={{ marginBottom: "20px" }}>Feeds - Read Javscript blogs</h1>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <h1 style={{ marginBottom: "20px" }}>{heading}</h1>
+      </div>
 
       {docs ? (
         docs.map((blog) => (

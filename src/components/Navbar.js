@@ -5,9 +5,11 @@ import "../index.css";
 import { AiFillHome } from "react-icons/ai";
 import { ImRocket } from "react-icons/im";
 import { RiZcoolFill } from "react-icons/ri";
+import useFirestore from "../hooks/useFirestore";
 
 function Navbar({ user, logout, login }) {
-  const [activePage, setActivePage] = useState(false);
+  const { searchBlogNames } = useFirestore("blogs");
+  const [searchTerm, setSearchTerm] = useState(null);
 
   return (
     <div
