@@ -23,9 +23,9 @@ const MyBlogs = ({ user }) => {
             className="profile"
             style={{
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "flex-start",
               flexDirection: "column",
-              alignItems: "center",
+              alignItems: "flex-start",
               marginLeft: "240px",
             }}
           >

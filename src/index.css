@@ -100,7 +100,6 @@ label span {
   .profile {
     justify-content: flex-start;
     align-items: flex-start;
-    margin-left: 0px !important;
   }
 }
 .active {
@@ -220,6 +219,8 @@ label span {
   .profile {
     margin-top: 90px;
     margin-left: 60px !important;
+    justify-content: center !important;
+    align-items: center !important;
   }
   .blogs {
     margin-top: 100px;
