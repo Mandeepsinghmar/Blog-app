@@ -332,7 +332,6 @@ const BlogDetails = ({ user }) => {
                 style={{ borderRadius: "50%", border: "2px solid white" }}
               />
               <p style={{ fontWeight: "800" }}> {blog.author}</p>
-              {user.bio && <p>{user.bio}</p>}
             </Link>
           </div>
         )}
