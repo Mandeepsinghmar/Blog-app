@@ -7,11 +7,6 @@ import { ImRocket } from "react-icons/im";
 import { RiZcoolFill } from "react-icons/ri";
 
 function Navbar({ user, logout, login }) {
-  const [toggled, setToggled] = useState(false);
-  const handleClicked = () => {
-    logout();
-    setToggled(false);
-  };
   return (
     <div
       className="navbar"
@@ -92,7 +87,7 @@ function Navbar({ user, logout, login }) {
             <div
               className="profile-container"
               style={{
-                marginTop: "100px",
+                marginTop: "20px",
               }}
             >
               <img
@@ -105,7 +100,7 @@ function Navbar({ user, logout, login }) {
                 }}
                 src={user.photoURL}
                 alt=""
-                onClick={() => setToggled(!toggled)}
+                onClick={() => logout()}
               />
               <p
                 style={{
@@ -118,13 +113,6 @@ function Navbar({ user, logout, login }) {
                 {user.displayName}
               </p>
             </div>
-            {toggled && (
-              <div>
-                <p className="logout" onClick={handleClicked}>
-                  Logout
-                </p>
-              </div>
-            )}
           </>
         ) : (
           <div>
