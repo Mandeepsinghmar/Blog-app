@@ -1,0 +1,70 @@
+/* create new blog form */
+.create {
+  overflow: hidden;
+  /* width: 600px;
+    margin: auto; */
+  margin-left: 200px;
+}
+.create label {
+  text-align: left;
+  display: block;
+}
+
+.create h1 {
+  font-size: 1.5rem;
+  margin-top: 10px;
+}
+.banner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.toast {
+  margin-top: 50px;
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.create textarea {
+  width: 100%;
+  /* height: 130px; */
+  height: auto;
+  padding: 6px 10px;
+  margin: 10px 0;
+  /* border: 1px solid #ddd; */
+  border: none;
+
+  box-sizing: border-box;
+  display: block;
+  overflow: hidden;
+  outline: none;
+  font-size: 1.2rem;
+}
+
+.create .blog-name {
+  overflow: hidden;
+  width: 100%;
+  height: auto;
+  padding: 6px 10px;
+  margin: 10px 0;
+  font-size: 2rem;
+  /* border: 1px solid #ddd; */
+  border: none;
+  box-sizing: border-box;
+  display: block;
+  outline: none;
+}
+.create button {
+  width: 200px;
+  background: #f1356d;
+  color: #fff;
+  border: 0;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.editProfile input {
+  width: 100%;
+  padding: 6px;
+}
