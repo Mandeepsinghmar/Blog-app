@@ -32,7 +32,7 @@ function Navbar({ user, logout, login }) {
           style={{
             marginTop: "30px",
 
-            height: "50px",
+            height: "40px",
             width: "50px",
             fontSize: "1.5rem",
           }}
