@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { db } from "../firebase";
+import { db, auth } from "../firebase";
 
 const useFetchUserBlogs = (user) => {
   const [docs, setDocs] = useState([]);
+  const [loading, setLoading] = useState(false);
   console.log(user);
   useEffect(() => {
     if (user) {
@@ -19,13 +20,16 @@ const useFetchUserBlogs = (user) => {
             const time = Math.ceil(words / wpm);
             if (data.postedBy === user.uid) {
               documents.push({ ...doc.data(), id: doc.id, readingTime: time });
+              setLoading(true);
             }
           });
+
           setDocs(documents);
+          setLoading(false);
         });
     }
-  }, [user]);
-  return { docs };
+  }, []);
+  return { docs, loading };
 };
 
 export default useFetchUserBlogs;

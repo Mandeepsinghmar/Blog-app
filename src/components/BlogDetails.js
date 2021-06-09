@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense, lazy } from "react";
 import { useHistory, useParams } from "react-router";
 import { db } from "../firebase";
 
@@ -10,6 +10,8 @@ import useFirestore from "../hooks/useFirestore";
 import ReactHtmlParser from "react-html-parser";
 import moment from "moment";
 
+const UserProfile = lazy(() => import("./UserProfile"));
+
 const BlogDetails = ({ user }) => {
   const { id } = useParams();
   const { docs } = useFirestore("blogs");
@@ -18,6 +20,7 @@ const BlogDetails = ({ user }) => {
 
   const [loading, setLoading] = useState(false);
   const [readingTime, setReadingTime] = useState("");
+  const [users, setUsers] = useState(null);
 
   const history = useHistory();
 
@@ -35,7 +38,20 @@ const BlogDetails = ({ user }) => {
         }
       });
     });
+    return () => {
+      console.log("cleaned up");
+    };
   }, [id]);
+  useEffect(() => {
+    db.collection("users").onSnapshot((snap) => {
+      let docs = [];
+      snap.forEach((doc) => {
+        docs.push(doc.data());
+      });
+      setUsers(docs);
+      console.log(docs, users);
+    });
+  }, []);
 
   const deleteBlog = () => {
     db.collection("blogs").doc(id).delete();
@@ -46,8 +62,8 @@ const BlogDetails = ({ user }) => {
     <div
       className="blog-details"
       style={{
-        display: "flex",
-        justifyContent: "space-around",
+        // display: "flex",
+        // justifyContent: "space-between",
         marginLeft: "190px",
         gap: "40px",
 
@@ -60,17 +76,17 @@ const BlogDetails = ({ user }) => {
         </div>
       )}
 
-      <div
-        className="blog-details-container"
-        style={{
-          width: "600px",
-          borderLeft: "1px solid #e2e2e2",
-          borderRight: "1px solid #e2e2e2",
-          backgroundColor: "#eef0f1",
-        }}
-      >
-        {blog ? (
-          <>
+      {blog ? (
+        <div
+          className="details-container"
+          style={{
+            display: "flex",
+            overflow: "hidden",
+            justifyContent: "space-between",
+            borderRight: "1px solid #e2e2e2 ",
+          }}
+        >
+          <div style={{ borderRight: "1px solid #e2e2e2 " }}>
             <div>
               {blog.bannerUrl ? (
                 <img
@@ -120,18 +136,26 @@ const BlogDetails = ({ user }) => {
                   flexDirection: "column",
                 }}
               >
-                <Link to={`blogs/${blog.postedBy}`}>
-                  <img
-                    style={{
-                      borderRadius: "50%",
-                      height: "80px",
-                      marginTop: "-60px",
-                      border: "1.5px solid white",
-                    }}
-                    src={blog.userPicture}
-                    alt=""
-                  />
-                </Link>
+                {users
+                  ? users.map(
+                      (user) =>
+                        user.uid === blog.postedBy && (
+                          <Link to={`/blogs/${blog.postedBy}`}>
+                            <img
+                              style={{
+                                borderRadius: "50%",
+                                height: "80px",
+                                marginTop: "-60px",
+                                border: "2px solid white",
+                              }}
+                              src={user.photoURL}
+                              alt=""
+                            />
+                          </Link>
+                        )
+                    )
+                  : ""}
+
                 <div
                   style={{
                     display: "flex",
@@ -139,26 +163,34 @@ const BlogDetails = ({ user }) => {
                     alignitems: "center",
                   }}
                 >
-                  <Link
-                    to={`blogs/${blog.postedBy}`}
-                    style={{
-                      textTransform: "lowercase",
-                      textDecoration: "none",
-                    }}
-                  >
-                    <p
-                      className="author-name"
-                      style={{
-                        fontWeight: "bold",
-                        marginTop: "-5px",
-                        fontSize: "1.1rem",
-                        marginLeft: "8px",
-                      }}
-                    >
-                      {" "}
-                      {blog.author}
-                    </p>
-                  </Link>
+                  {users
+                    ? users.map(
+                        (user) =>
+                          user.uid === blog.postedBy && (
+                            <Link
+                              to={`/blogs/${blog.postedBy}`}
+                              style={{
+                                textTransform: "lowercase",
+                                textDecoration: "none",
+                              }}
+                            >
+                              <p
+                                className="author-name"
+                                style={{
+                                  fontWeight: "bold",
+                                  marginTop: "-5px",
+                                  fontSize: "1.1rem",
+                                  marginLeft: "8px",
+                                }}
+                              >
+                                {" "}
+                                {user.displayName}
+                              </p>
+                            </Link>
+                          )
+                      )
+                    : ""}
+
                   {blog.createdAt && (
                     <div
                       style={{
@@ -214,14 +246,14 @@ const BlogDetails = ({ user }) => {
             <div
               style={{
                 borderBottom: "1px solid #e2e2e2",
-                display: "flex",
-                flexDirection: "column",
+                // display: "flex",
+                // flexDirection: "column",
 
-                alignItems: "flex-start",
-                justifyContent: "flex-start",
+                // alignItems: "flex-start",
+                // justifyContent: "flex-start",
                 marginTop: "-20px",
 
-                width: "100%",
+                // width: "100%",
                 padding: " 10px 0px 20px  ",
               }}
             >
@@ -265,37 +297,46 @@ const BlogDetails = ({ user }) => {
                       padding: "4px 20px",
                     }}
                   >
-                    <Link
-                      to={`blogs/${comment.userId}`}
-                      style={{
-                        display: "flex",
-                        gap: "10px",
-                        justifyContent: "flex-start",
-                        alignItems: "center",
+                    {users
+                      ? users.map(
+                          (user) =>
+                            user.uid === comment.userId && (
+                              <Link
+                                to={`/blogs/${comment.userId}`}
+                                style={{
+                                  display: "flex",
+                                  gap: "10px",
+                                  justifyContent: "flex-start",
+                                  alignItems: "center",
 
-                        padding: "4px 20px",
-                        textDecoration: "none",
-                      }}
-                    >
-                      <img
-                        src={comment.photoUrl}
-                        style={{
-                          width: "25px",
-                          height: "25px",
-                          borderRadius: "50%",
-                        }}
-                        alt=""
-                      />
-                      <p
-                        style={{
-                          fontWeight: "bold",
-                          fontSize: "0.7rem",
-                          marginLeft: "-3px",
-                        }}
-                      >
-                        {comment.displayName}
-                      </p>
-                    </Link>
+                                  padding: "4px 20px",
+                                  textDecoration: "none",
+                                }}
+                              >
+                                <img
+                                  src={user.photoURL}
+                                  style={{
+                                    width: "25px",
+                                    height: "25px",
+                                    borderRadius: "50%",
+                                    border: "1px solid white",
+                                  }}
+                                  alt=""
+                                />
+                                <p
+                                  style={{
+                                    fontWeight: "bold",
+                                    fontSize: "0.7rem",
+                                    marginLeft: "-3px",
+                                  }}
+                                >
+                                  {user.displayName}
+                                </p>
+                              </Link>
+                            )
+                        )
+                      : ""}
+
                     <p style={{ fontSize: "0.8rem", marginLeft: "-5px" }}>
                       {comment.comment}
                     </p>
@@ -305,88 +346,78 @@ const BlogDetails = ({ user }) => {
                 <></>
               )}
             </div>
-          </>
-        ) : (
-          <div style={{ minHeight: "50vh" }}>
-            <Loader type="Oval" color="blue" height={370} width={30} />
           </div>
-        )}
-      </div>
+          <div className="user-container">
+            <div>
+              <Suspense fallback={<div>Loading..</div>}>
+                <UserProfile id={blog.postedBy} User={user} />
+              </Suspense>
+            </div>
 
-      <div
-        style={{
-          border: "1px solid #e2e2e2 ",
-          width: "397px",
-          paddingTop: "10px",
-        }}
-      >
-        {blog && (
-          <div>
-            <Link
-              to={`blogs/${blog.postedBy}`}
-              style={{ textDecoration: "none" }}
+            <div
+              style={{
+                borderTop: "1px solid #e2e2e2 ",
+                borderBottom: "1px solid #e2e2e2 ",
+                width: "397px",
+                paddingTop: "10px",
+                // width: "100%",
+              }}
             >
-              <img
-                src={blog.userPicture}
-                alt=""
-                style={{ borderRadius: "50%", border: "2px solid white" }}
-              />
-              <p style={{ fontWeight: "800" }}> {blog.author}</p>
-            </Link>
-          </div>
-        )}
-        <p
-          style={{ fontWeight: "600", marginTop: "30px", marginBottom: "20px" }}
-        >
-          Read more blogs
-        </p>
-        {docs ? (
-          docs
-            .sort(() => 0.5 - Math.random())
-            .slice(3, 7)
-            .map((blog) => (
-              <div>
-                <Link
-                  className="suggested-blog"
-                  to={`/blog/${blog.id}`}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    textDecoration: "none",
-                    marginBottom: "10px",
-                  }}
-                >
-                  <p
-                    style={{
-                      fontSize: "1.3rem",
-                      fontWeight: "800",
+              <p
+                style={{
+                  fontWeight: "600",
+                  marginTop: "30px",
+                  marginBottom: "20px",
+                }}
+              >
+                Read more blogs
+              </p>
+              {docs ? (
+                docs
+                  .sort(() => 0.5 - Math.random())
+                  .slice(3, 7)
+                  .map((blog) => (
+                    <div>
+                      <Link
+                        className="suggested-blog"
+                        to={`/blog/${blog.id}`}
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          textDecoration: "none",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        <p
+                          style={{
+                            fontSize: "1.3rem",
+                            fontWeight: "800",
 
-                      padding: "3px 0px",
-                      border: "1px solid #e2e2e2 ",
-                      width: "100%",
-                    }}
-                  >
-                    {blog.blogName.slice(0, 50)}
-                  </p>
-                </Link>
-              </div>
-            ))
-        ) : (
-          <div style={{ minHeight: "50vh" }}>
-            <Loader type="Oval" color="blue" height={370} width={30} />
+                            padding: "3px 0px",
+                            borderTop: "1px solid #e2e2e2 ",
+                            width: "100%",
+                          }}
+                        >
+                          {blog.blogName.slice(0, 50)}
+                        </p>
+                      </Link>
+                    </div>
+                  ))
+              ) : (
+                <div style={{ minHeight: "50vh" }}>
+                  <Loader type="Oval" color="blue" height={370} width={30} />
+                </div>
+              )}
+            </div>
           </div>
-        )}
-        {/* {userBlogs
-          ? userBlogs.map((blog) => {
-              // console.log(blog.blogName)
-              <Link>
-                <p>{blog.blogName}</p>
-              </Link>;
-            })
-          : "no blogs"} */}
-      </div>
+        </div>
+      ) : (
+        <div style={{ minHeight: "50vh" }}>
+          <Loader type="Oval" color="blue" height={370} width={30} />
+        </div>
+      )}
     </div>
   );
 };

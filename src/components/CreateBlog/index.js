@@ -75,22 +75,21 @@ function CreateBlog({ user }) {
     if (user) {
       e.preventDefault();
       const createdAt = timestamp();
-      const userPicture = user.photoURL;
-      const author = user.displayName;
+
       const userId = user.uid;
 
-      if (blogName != "" && blogContent != "") {
+      if (blogName !== "" && blogContent !== "") {
         db.collection("blogs").add({
           postedBy: userId,
-          // user,
+
           blogName,
-          author,
+
           blogContent,
           createdAt,
           bannerUrl,
-          userPicture,
         });
-        history.push("/");
+        window.location.reload();
+        history.goBack();
       } else {
         toast("Please add something to blog!", {
           className: "toast",

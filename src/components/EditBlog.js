@@ -7,6 +7,8 @@ import Loader from "react-loader-spinner";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import ReactHtmlParser from "react-html-parser";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function EditBlog({ user }) {
   const { id } = useParams();
@@ -94,20 +96,26 @@ function EditBlog({ user }) {
     if (user) {
       e.preventDefault();
       const updatedAt = timestamp();
-      const userPicture = user.photoURL;
-      const author = user.displayName;
-      const userId = user.uid;
-      db.collection("blogs").doc(id).update({
-        postedBy: userId,
 
-        blogName,
-        author,
-        blogContent,
-        updatedAt,
-        userPicture,
-        bannerUrl,
-      });
-      history.push("/");
+      const userId = user.uid;
+
+      if (blogName !== "" && blogContent !== "") {
+        db.collection("blogs").add({
+          postedBy: userId,
+
+          blogName,
+
+          blogContent,
+          updatedAt,
+          bannerUrl,
+        });
+        window.location.reload();
+        history.goBack();
+      } else {
+        toast("Please add something to blog!", {
+          className: "toast",
+        });
+      }
     } else {
       e.preventDefault();
       setPleaseLogin(true);
@@ -129,6 +137,19 @@ function EditBlog({ user }) {
       className="create"
       style={{ overflow: "hidden", marginTop: "20px", marginLeft: "200px" }}
     >
+      <>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </>
       <h1 style={{ marginBottom: "20px", fontSize: "1.5rem" }}>
         Edit your Blog
       </h1>
