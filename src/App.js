@@ -14,19 +14,66 @@ import EditBlog from "./components/EditBlog";
 
 import AllUsersBlogs from "./components/AllUsersBlogs";
 import Home from "./components/Home";
+import { db, auth, timestamp } from "./firebase";
+import EditProfile from "./components/EditProfile";
 const App = () => {
+  const [userExist, setUserExist] = useState(null);
   const [user, setUser] = useState(null);
 
   const loginBtnClick = async () => {
-    const data = await logInWithGoogle();
+    const user = await logInWithGoogle();
+    console.log(user);
+    if (user) {
+      db.collection("users").onSnapshot((snap) => {
+        let userId = [];
+        snap.forEach((doc) => {
+          userId.push(doc.id);
+        });
 
-    if (data) {
-      setUser(data);
+        let userExist = userId.includes(user.uid);
+        console.log(userExist);
+        setUserExist(userExist);
+      });
+      if (userExist) {
+        db.collection("users")
+          .doc(user.uid)
+          .onSnapshot((doc) => {
+            const User = doc.data();
+            console.log(User);
 
-      localStorage.setItem("user", JSON.stringify(data));
+            setUser(User);
+            localStorage.setItem("user", JSON.stringify(User));
+          });
+      } else {
+        const createdAt = timestamp();
+        const loggedInUser = {
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+          uid: user.uid,
+          email: user.email,
+          createdAt,
+        };
+        db.collection("users").doc(user.uid).set(loggedInUser);
+        // setUser(loggedInUser);
+        // localStorage.setItem("user", JSON.stringify(loggedInUser));
+      }
     }
   };
+  // console.log(userExist);
+  useEffect(() => {
+    if (user) {
+      db.collection("users")
+        .doc(user.uid)
+        .onSnapshot((doc) => {
+          const User = doc.data();
+          console.log(User);
 
+          setUser(User);
+          localStorage.setItem("user", JSON.stringify(User));
+        });
+    }
+    // return () => {};
+  }, [auth.currentUser]);
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
@@ -71,11 +118,12 @@ const App = () => {
             <Route exact path="/blogs/:id">
               <AllUsersBlogs />
             </Route>
-            <Route exact path="/blog/blogs/:id">
-              <AllUsersBlogs />
-            </Route>
+
             <Route exact path="/edit/:id">
               <EditBlog user={user} setUser={setUser} />
+            </Route>
+            <Route exact path="/editprofile/:id">
+              <EditProfile user={user} setUser={setUser} />
             </Route>
 
             <Route path="*">

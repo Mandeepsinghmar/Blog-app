@@ -3,12 +3,13 @@ import { auth, provider, db } from "../firebase";
 export const logInWithGoogle = async () => {
   let user;
 
-  await auth
+  const data = await auth
     .signInWithPopup(provider)
-    .then((res) => {
-      console.log(res.user);
-      user = res.user;
+    .then((data) => {
+      console.log(data.user);
+      user = data.user;
     })
+
     .catch((err) => {
       console.log(err.message);
     });
