@@ -16,6 +16,7 @@ import AllUsersBlogs from "./components/AllUsersBlogs";
 import Home from "./components/Home";
 import { db, auth, timestamp } from "./firebase";
 import EditProfile from "./components/EditProfile";
+import MessageContainer from "./components/MessageContainer";
 const App = () => {
   const [userExist, setUserExist] = useState(null);
   const [user, setUser] = useState(null);
@@ -24,25 +25,34 @@ const App = () => {
     const user = await logInWithGoogle();
     console.log(user);
     if (user) {
-      db.collection("users").onSnapshot((snap) => {
-        let userId = [];
-        snap.forEach((doc) => {
-          userId.push(doc.id);
-        });
+      const userExist = await db.collection("users").doc(user.uid).get();
+      // db.collection("users")
+      //   .doc(user.uid)
+      //   .onSnapshot((snap) => {
+      // let userId = [];
+      // snap.forEach((doc) => {
+      //   userId.push(doc.id);
+      // });
 
-        let userExist = userId.includes(user.uid);
-        console.log(userExist);
-        setUserExist(userExist);
-      });
-      if (userExist) {
+      // let userExist = userId.includes(user.uid);
+      // console.log(userExist);
+      // setUserExist(snap.data());
+      // console.log(snap.data());
+      // });
+      // console.log(userExist.data());
+      if (userExist.data() !== undefined) {
         db.collection("users")
           .doc(user.uid)
-          .onSnapshot((doc) => {
-            const User = doc.data();
-            console.log(User);
-
-            setUser(User);
-            localStorage.setItem("user", JSON.stringify(User));
+          .update({ isOnline: true })
+          .then(() => {
+            db.collection("users")
+              .doc(user.uid)
+              .onSnapshot((doc) => {
+                const User = doc.data();
+                console.log(User);
+                setUser(User);
+                localStorage.setItem("user", JSON.stringify(User));
+              });
           });
       } else {
         const createdAt = timestamp();
@@ -52,10 +62,11 @@ const App = () => {
           uid: user.uid,
           email: user.email,
           createdAt,
+          isOnline: true,
         };
         db.collection("users").doc(user.uid).set(loggedInUser);
-        // setUser(loggedInUser);
-        // localStorage.setItem("user", JSON.stringify(loggedInUser));
+        setUser(loggedInUser);
+        localStorage.setItem("user", JSON.stringify(loggedInUser));
       }
     }
   };
@@ -72,7 +83,7 @@ const App = () => {
           localStorage.setItem("user", JSON.stringify(User));
         });
     }
-    // return () => {};
+    return () => {};
   }, [auth.currentUser]);
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -82,11 +93,13 @@ const App = () => {
   }, []);
 
   const logoutBtnClick = async () => {
-    const logout_success = await logout();
+    const logout_success = await logout(user);
     console.log(logout_success);
+
     if (logout_success) {
-      setUser(!logout_success);
+      setUser(null);
       localStorage.removeItem("user");
+
       console.log("logout");
     }
   };
@@ -94,7 +107,7 @@ const App = () => {
   return (
     <Router>
       <div className="app" style={{ textAlign: "center" }}>
-        <Navbar user={user} login={loginBtnClick} logout={logoutBtnClick} />
+        <Navbar user={user} login={loginBtnClick} />
         {/* <button onClick={logInBtnClick}>login</button> */}
         <div className="content">
           {/* {user && ( */}
@@ -107,16 +120,20 @@ const App = () => {
             <Route exact path="/create">
               <CreateBlog user={user} />
             </Route>
-            <Route exact path="/myblogs">
-              <MyBlogs user={user} />
+
+            <Route exact path="/profile">
+              <MyBlogs user={user} logout={logoutBtnClick} />
             </Route>
 
+            <Route exact path="/chat">
+              <MessageContainer user={user} />
+            </Route>
             <Route exact path="/blog/:id">
               <BlogDetails user={user} />
               {/* <BlogDetails /> */}
             </Route>
             <Route exact path="/blogs/:id">
-              <AllUsersBlogs />
+              <AllUsersBlogs loggedInUser={user} logout={logoutBtnClick} />
             </Route>
 
             <Route exact path="/edit/:id">

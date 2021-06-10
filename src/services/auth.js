@@ -2,6 +2,7 @@ import { auth, provider, db } from "../firebase";
 
 export const logInWithGoogle = async () => {
   let user;
+  let err;
 
   const data = await auth
     .signInWithPopup(provider)
@@ -11,21 +12,28 @@ export const logInWithGoogle = async () => {
     })
 
     .catch((err) => {
+      err = err.message;
       console.log(err.message);
     });
 
   return user;
 };
 
-export const logout = async () => {
+export const logout = async (user) => {
   let logout_success;
-  await auth
-    .signOut()
+  await db
+    .collection("users")
+    .doc(user.uid)
+    .update({ isOnline: false })
     .then(() => {
-      console.log("logout successful");
-      logout_success = true;
-    })
-    .catch((err) => console.log(err.message));
+      auth
+        .signOut()
+        .then(() => {
+          console.log("logout successful");
+          logout_success = true;
+        })
+        .catch((err) => console.log(err.message));
+    });
 
   return logout_success;
 };

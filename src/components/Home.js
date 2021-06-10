@@ -5,7 +5,7 @@ import BlogList from "./BlogList";
 const Home = ({ user }) => {
   const { docs } = useFirestore("blogs");
   return (
-    <div className="blogs">
+    <div className="home-blogs">
       <BlogList docs={docs} user={user} heading="Feeds - read JS blogs" />
     </div>
   );

@@ -1,21 +1,37 @@
-import React, { useState, useEffect } from "react";
-import { db } from "../firebase";
+import React, { Suspense, useState, lazy } from "react";
+
 import { Link } from "react-router-dom";
 import useFetchUserBlogs from "../hooks/useFetchUserBlogs";
 import Loader from "react-loader-spinner";
-import { AiOutlineComment } from "react-icons/ai";
-import ReactHtmlParser from "react-html-parser";
+import { FaBirthdayCake } from "react-icons/fa";
+import { GoLocation } from "react-icons/go";
+import { AiOutlineLogout } from "react-icons/ai";
+
 import moment from "moment";
-import BlogList from "./BlogList";
+import { logout } from "../services/auth";
+// import BlogList from "./BlogList";
+const BlogList = lazy(() => import("./BlogList"));
 
-const MyBlogs = ({ user }) => {
+const MyBlogs = ({ user, logout }) => {
   const { docs, loading } = useFetchUserBlogs(user ? user : "");
+  const [joinedDate, setJoinedDate] = useState("");
 
-  console.log(docs);
-  const joinedDate = new Date(
-    user.createdAt.seconds * 1000
-  ).toLocaleDateString();
-  console.log(joinedDate);
+  const fetchDate = () => {
+    if (user) {
+      if (user.createdAt !== null) {
+        setTimeout(() => {
+          const date = new Date(
+            user.createdAt.seconds * 1000
+          ).toLocaleDateString();
+          setJoinedDate(date);
+        }, 1000);
+      }
+    }
+  };
+  fetchDate();
+
+  // console.log(joinedDate);
+
   return (
     <div
       className="user-blogs"
@@ -28,7 +44,10 @@ const MyBlogs = ({ user }) => {
       )}
       {user ? (
         <div className="blog-list">
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div
+            style={{ display: "flex", justifyContent: "center", gap: "10px" }}
+            className="profile__container"
+          >
             <div
               className="profile"
               style={{
@@ -63,38 +82,100 @@ const MyBlogs = ({ user }) => {
               </p>
               <p>{user.bio}</p>
 
-              <div>
-                <p>{user.location}</p>
-                {/* {user.createdAt && ( */}
-                {/* <p>joined on {user.createdAt}</p> */}
-                {/* {moment(user.createdAt.toDate()).format("MMM D")} */}
-                {console.log(user.createdAt)}
-                {/* )} */}
+              <div style={{ display: "flex", gap: "20px" }}>
+                <div>
+                  {user.location && (
+                    <>
+                      {" "}
+                      <GoLocation />
+                      <span style={{ fontSize: "0.9rem" }}>
+                        {user.location}
+                      </span>
+                    </>
+                  )}
+                </div>
+                <div>
+                  {/* {date ? <p>{date}</p> : ""} */}
+                  {joinedDate ? (
+                    <>
+                      <FaBirthdayCake />{" "}
+                      <span style={{ fontSize: "0.9rem" }}>
+                        Joined on{" "}
+                        {joinedDate && moment(joinedDate).format("MMM D, YYYY")}
+                      </span>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </div>
               </div>
               <div>
                 {" "}
-                <a href={user.website} target="_blank">
-                  {user.website}
-                </a>
+                {user.website ? (
+                  <a
+                    href={user.website}
+                    target="_blank"
+                    rel="noreferrer nofollow"
+                    style={{ textDecoration: "none", color: "blue" }}
+                  >
+                    {user.website.substr(8)}
+                  </a>
+                ) : (
+                  ""
+                )}
               </div>
-              <div>{user.work}</div>
-              <div>{user.skills}</div>
+              <div>
+                {" "}
+                {user.work && (
+                  <>
+                    <strong>Work as</strong>
+                    <span> {user.work}</span>
+                  </>
+                )}
+              </div>
             </div>
-            <div>
-              <button>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <button
+                style={{
+                  textDecoration: "none",
+                  color: "black",
+                  fontWeight: "800",
+                  padding: "6px 12px",
+                  backgroundColor: "#f9f871",
+                  border: "1px solid #e2e2e2",
+                  borderRadius: "10px",
+                }}
+              >
                 <Link
                   style={{
                     textDecoration: "none",
-                    color: "black",
-                    fontWeight: "800",
-                    padding: "6px 12px",
-                    backgroundColor: "f7",
                   }}
                   to={`/editprofile/${user.uid}`}
                 >
                   Edit profile
                 </Link>
               </button>
+              <p
+                style={{
+                  marginLeft: "20px",
+                  // marginTop: "10px",
+                  cursor: "pointer",
+                  border: "1px solid #e2e2e2",
+                  padding: "8px ",
+                  display: "flex",
+                  justifyContent: "center",
+                  borderRadius: "10px",
+                }}
+                onClick={() => logout()}
+              >
+                <AiOutlineLogout />
+              </p>
             </div>
           </div>
 
@@ -107,7 +188,9 @@ const MyBlogs = ({ user }) => {
               marginTop: "20px",
             }}
           >
-            <BlogList docs={docs} heading="" />
+            <Suspense fallback={<div>Loading...</div>}>
+              <BlogList docs={docs} heading="" />
+            </Suspense>
           </div>
         </div>
       ) : (

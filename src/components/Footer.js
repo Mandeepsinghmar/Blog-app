@@ -8,7 +8,7 @@ export default function Footer() {
         alignItems: "center",
       }}
     >
-      <h4>Made by mandeep</h4>
+      <h4> Made by mandeep</h4>
     </div>
   );
 }
