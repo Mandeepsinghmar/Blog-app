@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import "../index.css";
-import { AiFillHome } from "react-icons/ai";
+import { AiFillHome, AiOutlineMessage } from "react-icons/ai";
 import { ImRocket } from "react-icons/im";
 import { RiZcoolFill } from "react-icons/ri";
 
@@ -74,11 +74,12 @@ function Navbar({ user, logout, login }) {
             </p>
             <p className="icon-name">Write</p>
           </NavLink>
-          <NavLink activeClassName="active" className="link" to="/myblogs">
+
+          <NavLink activeClassName="active" className="link" to="/chat">
             <p>
-              <RiZcoolFill className="nav-icon" />
+              <AiOutlineMessage className="nav-icon" />
             </p>
-            <p className="icon-name">Profile</p>
+            <p className="icon-name">Chat</p>
           </NavLink>
         </div>
 
@@ -90,28 +91,45 @@ function Navbar({ user, logout, login }) {
                 marginTop: "20px",
               }}
             >
-              <img
-                style={{
-                  borderRadius: "50%",
-                  height: "80px",
-                  width: "80px",
-                  cursor: "pointer",
-                  border: "2px solid white",
-                }}
-                src={user.photoURL}
-                alt=""
-                onClick={() => logout()}
-              />
-              <p
-                style={{
-                  color: "#000",
-                  fontSize: "1.2rem",
-                  textTransform: "lowercase",
-                  fontWeight: "800",
-                }}
+              <NavLink
+                to="/profile"
+                activeClassName="selected"
+                style={{ textDecoration: "none" }}
               >
-                {user.displayName}
-              </p>
+                <img
+                  style={{
+                    borderRadius: "50%",
+                    height: "80px",
+                    width: "80px",
+                    cursor: "pointer",
+                    border: "2px solid white",
+                    position: "relative",
+                  }}
+                  src={user.photoURL}
+                  alt=""
+                />
+                <span
+                  style={{
+                    position: "absolute",
+                    backgroundColor: "green",
+                    borderRadius: "50%",
+                    height: "10px",
+                    width: "10px",
+                    left: "110px",
+                    top: "5px",
+                  }}
+                ></span>
+                <p
+                  style={{
+                    color: "#000",
+                    fontSize: "1.2rem",
+                    textTransform: "lowercase",
+                    fontWeight: "800",
+                  }}
+                >
+                  {user.displayName}
+                </p>
+              </NavLink>
             </div>
           </>
         ) : (
