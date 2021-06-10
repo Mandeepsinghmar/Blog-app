@@ -27,10 +27,10 @@ const MessageContainer = ({ user }) => {
   return (
     <div
       className="message-container"
-      style={{ marginTop: "20px", marginLeft: "200px" }}
+      style={{ marginTop: "20px",padding:"15px", marginLeft: "200px" }}
     >
       {user ? (
-        <div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
           {users ? (
             <div
               style={{
@@ -45,6 +45,7 @@ const MessageContainer = ({ user }) => {
                   id={user.uid}
                   style={{
                     width: "50px",
+
                     display: "flex",
                     flexDirection: "column",
                     flexWrap: "wrap",
@@ -73,17 +74,17 @@ const MessageContainer = ({ user }) => {
                         border: "1px solid white",
                       }}
                     />
-                    <span
+
+                    <div
                       style={{
                         position: "absolute",
-                        backgroundColor: user.isOnline ? "green" : "red",
+                        backgroundColor: user.isOnline ? "green" : "blue",
                         borderRadius: "50%",
-                        height: "8px",
-                        width: "8px",
-
-                        top: "28px",
+                        height: "6px",
+                        width: "6px",
                       }}
-                    ></span>
+                    ></div>
+
                     <p
                       style={{
                         fontWeight: "800",
@@ -95,18 +96,18 @@ const MessageContainer = ({ user }) => {
                       {user.displayName}
                     </p>
                   </div>
-                  <div className="chat-container">
-                    <div></div>
-                    <div>
-                      <input
-                        type="text"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                      />
-                    </div>
-                  </div>
                 </div>
               ))}
+              {/* <div className="chat-input-container"> */}
+              <div className="chat-input-wrapper">
+                <input
+                  type="text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+                <button>send</button>
+              </div>
+              {/* </div> */}
             </div>
           ) : (
             <div>

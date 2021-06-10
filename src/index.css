@@ -95,6 +95,31 @@ label span {
   padding: 8px 12px !important;
   font-size: 0.9rem !important;
 }
+
+/* chat css */
+.message-container {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  width: 70%;
+}
+
+.chat-input-wrapper {
+  display: flex;
+  /* justify-content: space-between;  */
+  position: fixed;
+  width: 70%;
+  bottom: 3px;
+  height: 60px;
+  overflow: hidden;
+}
+.chat-input-wrapper input {
+  width: 90%;
+}
+.chat-input-wrapper button {
+  width: 10%;
+}
+
 @media screen and (max-width: 1030px) {
   .blog-details {
     flex-direction: column !important;
@@ -192,6 +217,20 @@ label span {
   .blog-details {
     margin-top: 90px !important
     ;
+  }
+  .message-container {
+    margin-left: 0px !important;
+  }
+  .chat-input-wrapper {
+    width: 100%;
+    padding: 0px !important;
+    margin-left: -14px !important;
+  }
+  .chat-input-wrapper input {
+    width: 80%;
+  }
+  .chat-input-wrapper button {
+    width: 20%;
   }
   .logo h1 {
     height: 30px;
