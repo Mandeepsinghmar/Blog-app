@@ -101,24 +101,24 @@ label span {
   height: 100%;
   overflow: hidden;
   position: relative;
-  width: 70%;
+  /* width: 70%; */
 }
 
 .chat-input-wrapper {
   display: flex;
   /* justify-content: space-between;  */
   position: fixed;
-  width: 70%;
+  /* width: 70%; */
   bottom: 3px;
   height: 60px;
   overflow: hidden;
 }
-.chat-input-wrapper input {
+/* .chat-input-wrapper input {
   width: 90%;
 }
 .chat-input-wrapper button {
   width: 10%;
-}
+} */
 
 @media screen and (max-width: 1030px) {
   .blog-details {
