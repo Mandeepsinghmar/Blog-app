@@ -51,7 +51,7 @@ const UserProfile = ({ id, User }) => {
           <p>{user.displayName}</p>
           <p>{user.bio}</p>
           <a href={user.website} target="_blank" rel="noreferrer nofollow">
-            {user.website.substr(8)}
+            {user.website && user.website.substr(8)}
           </a>
           {User && User.uid === user.uid && (
             <div>
