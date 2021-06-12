@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { db, timestamp } from "../firebase";
 import Loader from "react-loader-spinner";
 import { Link } from "react-router-dom";
-import TextareaAutosize from "react-autosize-textarea/lib";
+import TextareaAutosize from "react-autosize-textarea";
 
 const MessageContainer = ({ user }) => {
   const [users, setUsers] = useState([]);
@@ -257,9 +257,9 @@ const MessageContainer = ({ user }) => {
                           alt=""
                         />
                       </Link>
-                    {console.log(conversation.createdAt}
+                      {/* {console.log(conversation.createdAt} */}
                       <p ref={messagesEndRef} className="msg">
-                        {/* {conversation.message} */}
+                        {conversation.message}
                       </p>
                     </div>
                     {/* <span ref={messagesEndRef}></span> */}
