@@ -26,20 +26,7 @@ const App = () => {
     console.log(user);
     if (user) {
       const userExist = await db.collection("users").doc(user.uid).get();
-      // db.collection("users")
-      //   .doc(user.uid)
-      //   .onSnapshot((snap) => {
-      // let userId = [];
-      // snap.forEach((doc) => {
-      //   userId.push(doc.id);
-      // });
 
-      // let userExist = userId.includes(user.uid);
-      // console.log(userExist);
-      // setUserExist(snap.data());
-      // console.log(snap.data());
-      // });
-      // console.log(userExist.data());
       if (userExist.data() !== undefined) {
         db.collection("users")
           .doc(user.uid)
@@ -58,7 +45,9 @@ const App = () => {
         const createdAt = timestamp();
         const loggedInUser = {
           displayName: user.displayName,
-          photoURL: user.photoURL,
+          photoURL:
+            user.photoURL ||
+            "https://api.adorable.io/avatars/23/abott@adorable.png",
           uid: user.uid,
           email: user.email,
           createdAt,
@@ -99,6 +88,7 @@ const App = () => {
     if (logout_success) {
       setUser(null);
       localStorage.removeItem("user");
+      localStorage.removeItem("users");
 
       console.log("logout");
     }

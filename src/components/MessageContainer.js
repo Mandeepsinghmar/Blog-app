@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { db, timestamp } from "../firebase";
 import Loader from "react-loader-spinner";
+import TextareaAutosize from "react-autosize-textarea/lib";
 
 const MessageContainer = ({ user }) => {
   const [users, setUsers] = useState([]);
@@ -31,7 +32,15 @@ const MessageContainer = ({ user }) => {
         });
 
         setUsers(users);
+        localStorage.setItem("users", JSON.stringify(users));
       });
+    }
+  }, []);
+
+  useEffect(() => {
+    const users = JSON.parse(localStorage.getItem("users"));
+    if (users) {
+      setUsers(users);
     }
   }, []);
 
@@ -42,28 +51,6 @@ const MessageContainer = ({ user }) => {
     setChattingUserImage(user.photoURL);
     setChattingUserIsOnline(user.isOnline);
     setChattingUserId(user.uid);
-
-    // db.collection("conversations")
-    //   .where("loggedInUserId", "in", [loggedInUser.uid, chattingUserId])
-    //   .orderBy("createdAt", "asc")
-    //   .onSnapshot((snap) => {
-    //     const documents = [];
-    //     snap.forEach((doc) => {
-    //       console.log(doc.data());
-    //       let data = doc.data();
-    //       console.log(data.loggedInUserId, data.chattingUserId);
-    //       if (
-    //         (data.loggedInUserId === loggedInUser.uid &&
-    //           data.chattingUserId === chattingUserId) ||
-    //         (data.loggedInUserId === chattingUserId &&
-    //           data.chattingUserId === loggedInUser.uid)
-    //       ) {
-    //         documents.push(doc.data());
-    //       }
-    //     });
-    //     setConversations(documents);
-    //     console.log(documents);
-    //   });
   };
   useEffect(() => {
     if (loggedInUser) {
@@ -90,7 +77,8 @@ const MessageContainer = ({ user }) => {
     }
   }, [User]);
 
-  const submitMessage = () => {
+  const submitMessage = async (e) => {
+    e.preventDefault();
     const createdAt = timestamp();
     const msg = {
       createdAt,
@@ -99,109 +87,72 @@ const MessageContainer = ({ user }) => {
       chattingUserId,
     };
 
-    if (message !== "") {
-      db.collection("conversations").add(msg);
-      setMessage("");
-    }
+    await db.collection("conversations").add(msg);
+
+    setMessage("");
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <div
-      className="message-container"
-      style={{
-        padding: "15px",
-        marginLeft: "200px",
-        // display: "flex",
-        // flexDirection: "column",
-        marginBottom: "80px",
-      }}
-    >
+    <>
       {user ? (
-        <div
-          style={
-            {
-              // display: "flex",
-              // flexDirection: "column",
-              // justifyContent: "flex-start",
-              // alignItems: "flex-start",
-            }
-          }
-          // style={{ marginBottom: "40px" }}
-        >
+        <div className="message-container" style={{ marginLeft: "190px" }}>
           {users ? (
             <div
+              className="all-users"
               style={{
                 display: "flex",
-                justifyContent: "flex-start",
+                justifyContent: "center",
                 alignItems: "flex-start",
-                gap: "5px",
+
+                borderTop: "1px solid #e2e2e2",
+                borderBottom: "1px solid #e2e2e2",
               }}
             >
               {users.map((user) => (
-                <div
-                  key={user.uid}
-                  style={{
-                    width: "50px",
-
-                    display: "flex",
-                    flexDirection: "column",
-                    flexWrap: "wrap",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
+                <>
                   <div
                     key={user.uid}
                     style={{
                       display: "flex",
                       flexDirection: "column",
-                      // flexWrap: "wrap",
+
                       justifyContent: "flex-start",
                       alignItems: "center",
                       cursor: "pointer",
+                      width: "50px",
+                      margin: "3px",
                     }}
                   >
-                    <div>
-                      <img
-                        onClick={() => initializeChat(user)}
-                        src={user.photoURL}
-                        alt=""
-                        style={{
-                          width: "30px",
-                          height: "30px",
-                          borderRadius: "50%",
-                          position: "relative",
-                          border: "1px solid white",
-                        }}
-                      />
-                    </div>
+                    <img
+                      onClick={() => initializeChat(user)}
+                      src={user.photoURL}
+                      alt=""
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        borderRadius: "50%",
+                        position: "relative",
+                        border: user.isOnline
+                          ? "2px solid #90EE90"
+                          : "2px solid #C0C0C0",
+                      }}
+                    />
 
-                    <div>
-                      <p
-                        onClick={() => initializeChat(user)}
-                        style={{
-                          fontWeight: "800",
-                          fontSize: "0.6rem",
-                          overflowWrap: "break-word",
-                          wordWrap: "break-word",
-                        }}
-                      >
-                        {user.displayName}
-                      </p>
-                      <p
-                        style={{
-                          position: "absolute",
-                          backgroundColor: user.isOnline ? "green" : "blue",
-                          borderRadius: "50%",
-                          height: "6px",
-                          width: "6px",
-                          top: "12px",
-                          // left: "200px",
-                        }}
-                      ></p>
-                    </div>
+                    <p
+                      onClick={() => initializeChat(user)}
+                      style={{
+                        fontWeight: "800",
+                        fontSize: "0.6rem",
+                        overflowWrap: "break-word",
+                        wordWrap: "break-word",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {user.displayName}
+                    </p>
                   </div>
-                </div>
+                </>
               ))}
             </div>
           ) : (
@@ -210,31 +161,22 @@ const MessageContainer = ({ user }) => {
             </div>
           )}
           {/* chatting with */}
-          <div style={{ marginTop: "10px" }}>
+          <div
+            style={{
+              paddingTop: "8px",
+              borderBottom: "1px solid #e2e2e2",
+              paddingBottom: "8px",
+            }}
+          >
             {chattingStarted ? (
               <div
                 style={{
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  gap: "4px",
-                  position: "relative",
+                  gap: "8px",
                 }}
               >
-                <p
-                  style={{
-                    position: "absolute",
-                    backgroundColor: chattingUserIsOnline ? "green" : "blue",
-                    borderRadius: "50%",
-                    height: "8px",
-                    width: "8px",
-
-                    marginBottom: "25px",
-                    left: "21px",
-                    zIndex: "100",
-                  }}
-                ></p>
-
                 <img
                   src={chattingUserImage}
                   alt=""
@@ -242,14 +184,34 @@ const MessageContainer = ({ user }) => {
                     width: "30px",
                     height: "30px",
                     borderRadius: "50%",
-                    position: "relative",
-                    border: "1px solid white",
+
+                    border: chattingUserIsOnline
+                      ? "2px solid #90EE90"
+                      : "2px solid #C0C0C0",
                   }}
                 />
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <p
+                    style={{
+                      fontWeight: "800",
+                      fontSize: "0.6rem",
 
-                <p style={{ fontWeight: "600", textTransform: "capitalize" }}>
-                  {chattingUserName}
-                </p>
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {chattingUserName}
+                  </p>
+                  <p style={{ fontSize: "0.6rem" }}>
+                    {chattingUserIsOnline ? "Online" : "Offline"}
+                  </p>
+                </div>
               </div>
             ) : (
               ""
@@ -257,51 +219,61 @@ const MessageContainer = ({ user }) => {
           </div>
 
           {/* message section */}
-          {chattingStarted
-            ? conversations.map((conversation) => (
-                <div
-                  style={{
-                    marginTop: "20px",
-                    textAlign:
-                      conversation.loggedInUserId === loggedInUser.uid
-                        ? "right"
-                        : "left",
-                  }}
-                  ref={messagesEndRef}
-                >
-                  <p
-                    style={{
-                      backgroundColor:
+          <>
+            <main className="main" style={{ marginTop: "10px" }}>
+              {chattingStarted ? (
+                conversations.map((conversation) => (
+                  <>
+                    <div
+                      className={`message ${
                         conversation.loggedInUserId === loggedInUser.uid
-                          ? "white"
-                          : "skyblue",
-                      display: "inline-block",
-                      margin: "5px",
-                      padding: "5px 10px",
-                      borderRadius: "10px",
-                      maxWidth: "80%",
-                    }}
-                  >
-                    {conversation.message}
-                  </p>
+                          ? "sent"
+                          : "received"
+                      } `}
+                    >
+                      <img
+                        src={
+                          conversation.loggedInUserId === loggedInUser.uid
+                            ? loggedInUser.photoURL
+                            : chattingUserImage ||
+                              "https://api.adorable.io/avatars/23/abott@adorable.png"
+                        }
+                        alt=""
+                      />
+                      <p className="msg">{conversation.message}</p>
+                    </div>
+                  </>
+                ))
+              ) : (
+                <div>
+                  <h1>Choose any profile to chat!</h1>
                 </div>
-              ))
-            : null}
+              )}
+              <span ref={messagesEndRef}></span>
+            </main>
 
-          {/* chating input */}
-          {chattingStarted ? (
-            <div className="chat-input-wrapper" style={{ display: "flex" }}>
-              <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                style={{ flex: "8" }}
-              />
-              <button onClick={submitMessage} style={{ flex: "4" }}>
-                send
-              </button>
-            </div>
-          ) : null}
+            {/* chating input */}
+            {chattingStarted ? (
+              <div className="msg-form-container">
+                <form className="msg-form">
+                  <TextareaAutosize
+                    className="input"
+                    placeholder="Send messages"
+                    type="text"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                  />
+                  <button
+                    onClick={submitMessage}
+                    disabled={!message}
+                    type="submit"
+                  >
+                    🚀
+                  </button>
+                </form>
+              </div>
+            ) : null}
+          </>
         </div>
       ) : (
         <div
@@ -325,7 +297,7 @@ const MessageContainer = ({ user }) => {
           </p>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

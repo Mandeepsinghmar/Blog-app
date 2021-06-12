@@ -96,29 +96,137 @@ label span {
   font-size: 0.9rem !important;
 }
 
-/* chat css */
+/* chat css  */
 .message-container {
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  max-height: 95vh;
+  justify-content: center;
   overflow: hidden;
-  position: relative;
-  /* width: 70%; */
+}
+.message-container .all-users {
+  color: white;
+  width: 100%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow: hidden;
+}
+.main {
+  padding: 10px;
+  height: 80vh;
+
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 50px;
+
+  /* width: 100%; */
+  max-width: 730px;
+  margin: 0 auto;
+}
+main::-webkit-scrollbar {
+  width: 0.5rem;
 }
 
-.chat-input-wrapper {
+main::-webkit-scrollbar-track {
+  background: #e2e2e2;
+}
+
+main::-webkit-scrollbar-thumb {
+  background: #1e1e24;
+}
+
+/* .msg-form-container {
   display: flex;
-  /* justify-content: space-between;  */
-  position: fixed;
-  /* width: 70%; */
-  bottom: 3px;
-  height: 60px;
-  overflow: hidden;
-}
-/* .chat-input-wrapper input {
-  width: 90%;
-}
-.chat-input-wrapper button {
-  width: 10%;
+  justify-content: center;
+  height: 10vh;
+  margin-left: 190px;
 } */
+
+.msg-form {
+  background-color: white;
+
+  /* position: fixed;
+  bottom: 0; */
+  font-size: 1.5rem;
+  height: 10vh;
+
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.msg-form .input {
+  line-height: 1.5;
+  width: 80%;
+
+  font-size: 1.5rem;
+  background: white;
+  color: black;
+  outline: none;
+  border: none;
+  padding: 0 10px;
+}
+
+.msg-form button {
+  width: 20%;
+  background-color: black;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 1.25rem;
+}
+
+.msg-form button:disabled {
+  /* background-color: #fff; */
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.msg {
+  max-width: 500px;
+  margin-bottom: 12px;
+  line-height: 24px;
+  padding: 10px 20px;
+  border-radius: 25px;
+  position: relative;
+  color: white;
+  text-align: center;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+}
+
+.sent {
+  flex-direction: row-reverse;
+}
+
+.sent .msg {
+  color: black;
+  background: #e5e5ea;
+  align-self: flex-end;
+}
+.received .msg {
+  background: #0b93f6;
+  color: white;
+}
+
+.message img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 2px 5px;
+}
+
+/* chat ending css */
 
 @media screen and (max-width: 1030px) {
   .blog-details {
@@ -219,18 +327,23 @@ label span {
     ;
   }
   .message-container {
+    justify-content: flex-start !important;
     margin-left: 0px !important;
+
+    margin-top: 100px;
+    max-height: 85vh;
   }
-  .chat-input-wrapper {
+  .msg-form {
+    margin: 0px !important;
     width: 100%;
-    padding: 0px !important;
-    margin-left: -14px !important;
+    max-width: 600px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 8vh;
   }
-  .chat-input-wrapper input {
-    width: 80%;
-  }
-  .chat-input-wrapper button {
-    width: 20%;
+  .msg-form input {
+    display: flex;
   }
   .logo h1 {
     height: 30px;
@@ -330,9 +443,6 @@ label span {
   }
   .user-blogs .title {
     margin-left: 0px !important;
-  }
-  .message-container {
-    margin-top: 100px !important;
   }
 }
 @media screen and (max-width: 380px) {
