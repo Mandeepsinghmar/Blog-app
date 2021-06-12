@@ -39,6 +39,7 @@ function BlogList({ docs, heading, user }) {
         className="blog-list"
         style={{
           marginLeft: "190px",
+          marginBottom: "20px",
         }}
       >
         <div

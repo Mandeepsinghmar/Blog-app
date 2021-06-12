@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { db, timestamp } from "../firebase";
 import Loader from "react-loader-spinner";
+import { Link } from "react-router-dom";
 import TextareaAutosize from "react-autosize-textarea/lib";
 
 const MessageContainer = ({ user }) => {
@@ -102,11 +103,12 @@ const MessageContainer = ({ user }) => {
               className="all-users"
               style={{
                 display: "flex",
-                justifyContent: "center",
+                justifyContent: "flex-start",
                 alignItems: "flex-start",
 
                 borderTop: "1px solid #e2e2e2",
                 borderBottom: "1px solid #e2e2e2",
+                marginLeft: "7px",
               }}
             >
               {users.map((user) => (
@@ -164,7 +166,7 @@ const MessageContainer = ({ user }) => {
           <div
             style={{
               paddingTop: "8px",
-              borderBottom: "1px solid #e2e2e2",
+              borderBottom: chattingStarted ? "1px solid #e2e2e2" : "",
               paddingBottom: "8px",
             }}
           >
@@ -172,46 +174,54 @@ const MessageContainer = ({ user }) => {
               <div
                 style={{
                   display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
                   gap: "8px",
+                  marginLeft: "10px",
                 }}
               >
-                <img
-                  src={chattingUserImage}
-                  alt=""
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    borderRadius: "50%",
-
-                    border: chattingUserIsOnline
-                      ? "2px solid #90EE90"
-                      : "2px solid #C0C0C0",
-                  }}
-                />
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "flex-start",
-                  }}
-                >
-                  <p
+                <Link to={`/blogs/${chattingUserId}`}>
+                  <img
+                    src={chattingUserImage}
+                    alt=""
                     style={{
-                      fontWeight: "800",
-                      fontSize: "0.6rem",
+                      width: "30px",
+                      height: "30px",
+                      borderRadius: "50%",
 
-                      textTransform: "capitalize",
+                      border: chattingUserIsOnline
+                        ? "2px solid #90EE90"
+                        : "2px solid #C0C0C0",
+                    }}
+                  />
+                </Link>
+                <Link
+                  to={`/blogs/${chattingUserId}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "flex-start",
                     }}
                   >
-                    {chattingUserName}
-                  </p>
-                  <p style={{ fontSize: "0.6rem" }}>
-                    {chattingUserIsOnline ? "Online" : "Offline"}
-                  </p>
-                </div>
+                    <p
+                      style={{
+                        fontWeight: "800",
+                        fontSize: "0.8rem",
+
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {chattingUserName}
+                    </p>
+                    <p style={{ fontSize: "0.6rem" }}>
+                      {chattingUserIsOnline ? "Online" : "Offline"}
+                    </p>
+                  </div>
+                </Link>
               </div>
             ) : (
               ""
@@ -231,17 +241,28 @@ const MessageContainer = ({ user }) => {
                           : "received"
                       } `}
                     >
-                      <img
-                        src={
+                      <Link
+                        to={
                           conversation.loggedInUserId === loggedInUser.uid
-                            ? loggedInUser.photoURL
-                            : chattingUserImage ||
-                              "https://api.adorable.io/avatars/23/abott@adorable.png"
+                            ? `/blogs/${loggedInUser.uid}`
+                            : `/blogs/${chattingUserId}`
                         }
-                        alt=""
-                      />
-                      <p className="msg">{conversation.message}</p>
+                      >
+                        <img
+                          src={
+                            conversation.loggedInUserId === loggedInUser.uid
+                              ? loggedInUser.photoURL
+                              : chattingUserImage
+                          }
+                          alt=""
+                        />
+                      </Link>
+                    {console.log(conversation.createdAt}
+                      <p ref={messagesEndRef} className="msg">
+                        {/* {conversation.message} */}
+                      </p>
                     </div>
+                    {/* <span ref={messagesEndRef}></span> */}
                   </>
                 ))
               ) : (
@@ -249,13 +270,12 @@ const MessageContainer = ({ user }) => {
                   <h1>Choose any profile to chat!</h1>
                 </div>
               )}
-              <span ref={messagesEndRef}></span>
             </main>
 
             {/* chating input */}
             {chattingStarted ? (
               <div className="msg-form-container">
-                <form className="msg-form">
+                <form className="msg-form" onSubmit={submitMessage}>
                   <TextareaAutosize
                     className="input"
                     placeholder="Send messages"
@@ -263,11 +283,7 @@ const MessageContainer = ({ user }) => {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                   />
-                  <button
-                    onClick={submitMessage}
-                    disabled={!message}
-                    type="submit"
-                  >
+                  <button disabled={!message} type="submit">
                     🚀
                   </button>
                 </form>

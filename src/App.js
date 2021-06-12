@@ -45,9 +45,7 @@ const App = () => {
         const createdAt = timestamp();
         const loggedInUser = {
           displayName: user.displayName,
-          photoURL:
-            user.photoURL ||
-            "https://api.adorable.io/avatars/23/abott@adorable.png",
+          photoURL: user.photoURL,
           uid: user.uid,
           email: user.email,
           createdAt,
