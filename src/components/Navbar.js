@@ -102,23 +102,13 @@ function Navbar({ user, logout, login }) {
                     height: "80px",
                     width: "80px",
                     cursor: "pointer",
-                    border: "2px solid white",
+                    border: "2px solid #90EE90",
                     position: "relative",
                   }}
                   src={user.photoURL}
                   alt=""
                 />
-                <span
-                  style={{
-                    position: "absolute",
-                    backgroundColor: "green",
-                    borderRadius: "50%",
-                    height: "10px",
-                    width: "10px",
-                    left: "110px",
-                    top: "5px",
-                  }}
-                ></span>
+
                 <p
                   style={{
                     color: "#000",
