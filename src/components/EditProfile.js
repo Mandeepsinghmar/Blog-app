@@ -90,9 +90,8 @@ function EditProfile({ user }) {
       e.preventDefault();
       const updatedAt = timestamp();
 
-      const currentUser = auth.currentUser;
       if (displayName !== "") {
-        db.collection("users").doc(currentUser.uid).update({
+        db.collection("users").doc(user.uid).update({
           displayName,
           bio,
           website,

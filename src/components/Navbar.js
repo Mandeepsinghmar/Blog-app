@@ -123,7 +123,7 @@ function Navbar({ user, logout, login }) {
             </div>
           </>
         ) : (
-          <div>
+          <div className="login-container">
             <p
               className="login"
               style={{
