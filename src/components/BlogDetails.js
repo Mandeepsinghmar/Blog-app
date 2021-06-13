@@ -66,6 +66,7 @@ const BlogDetails = ({ user }) => {
         // justifyContent: "space-between",
         marginLeft: "190px",
         gap: "40px",
+        marginBottom: "20px",
 
         // backgroundColor: "white",
       }}
@@ -93,7 +94,7 @@ const BlogDetails = ({ user }) => {
                   src={blog.bannerUrl}
                   alt=""
                   style={{
-                    height: "200px",
+                    height: "250px",
                     borderRadius: "6px",
                     width: "100%",
                   }}
@@ -103,7 +104,7 @@ const BlogDetails = ({ user }) => {
                   src={banner}
                   alt=""
                   style={{
-                    height: "200px",
+                    height: "250px",
                     borderRadius: "6px",
                     width: "100%",
                   }}
