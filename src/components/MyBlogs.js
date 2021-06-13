@@ -8,8 +8,7 @@ import { GoLocation } from "react-icons/go";
 import { AiOutlineLogout } from "react-icons/ai";
 
 import moment from "moment";
-import { logout } from "../services/auth";
-// import BlogList from "./BlogList";
+
 const BlogList = lazy(() => import("./BlogList"));
 
 const MyBlogs = ({ user, logout }) => {
