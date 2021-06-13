@@ -18,7 +18,7 @@ import { db, auth, timestamp } from "./firebase";
 import EditProfile from "./components/EditProfile";
 import MessageContainer from "./components/MessageContainer";
 const App = () => {
-  const [userExist, setUserExist] = useState(null);
+  // const [userExist, setUserExist] = useState(null);
   const [user, setUser] = useState(null);
 
   const loginBtnClick = async () => {

@@ -311,6 +311,7 @@ label span {
 
     z-index: 1000;
   }
+
   .blog-details {
     margin-top: 90px !important
     ;
@@ -347,13 +348,13 @@ label span {
   }
   .navbar-links {
     margin: 0 auto !important;
-    margin-top: 20px !important;
+    margin-top: 35px !important;
     flex-direction: row !important;
   }
   .profile-icon {
     width: 30px !important;
     height: 35px;
-    margin-top: -10px !important;
+    /* margin-top: -10px !important; */
   }
   .navbar_items {
     flex-direction: row !important;
@@ -393,9 +394,7 @@ label span {
     font-size: 0.6rem !important;
     font-weight: 800;
   }
-  .login {
-    margin-top: 0px !important;
-  }
+
   .logout {
     top: 20px;
     left: 180px;
@@ -430,6 +429,7 @@ label span {
   }
   .login {
     margin-left: 20px;
+    margin-top: 4px !important;
   }
 
   .user-blogs {
@@ -445,9 +445,7 @@ label span {
     /* width: 300px !important; */
     margin-right: 0px !important;
   }
-  .logo {
-    margin-top: 10px;
-  }
+
   .userprofile-input {
     width: 240px !important;
   }
@@ -490,5 +488,13 @@ label span {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+}
+@media screen and (max-width: 370px) {
+  /* .navbar-links {
+    margin-top: -240px !important;
+  } */
+  .logo h1 {
+    margin-top: 35px !important;
   }
 }
