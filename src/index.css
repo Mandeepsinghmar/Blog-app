@@ -115,11 +115,11 @@ label span {
   padding: 10px;
   height: 80vh;
 
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
 
   width: 100%;
 }
-.main::-webkit-scrollbar {
+/* .main::-webkit-scrollbar {
   width: 0.5rem;
 }
 
@@ -128,8 +128,8 @@ label span {
 }
 
 .main::-webkit-scrollbar-thumb {
-  background: #1e1e24;
-}
+  background: #79798d;
+} */
 
 .msg-form {
   background-color: white;
