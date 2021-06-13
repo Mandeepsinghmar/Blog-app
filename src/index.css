@@ -134,10 +134,8 @@ label span {
 .msg-form {
   background-color: white;
 
-  /* position: fixed;
-  bottom: 0; */
   font-size: 1.5rem;
-  height: 10vh;
+  height: 8vh;
 
   width: 100%;
 

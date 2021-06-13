@@ -132,7 +132,7 @@ const MessageContainer = ({ user }) => {
                         borderRadius: "50%",
                         position: "relative",
                         border: user.isOnline
-                          ? "2px solid #90EE90"
+                          ? "2px solid green"
                           : "2px solid #C0C0C0",
                       }}
                     />
@@ -276,7 +276,7 @@ const MessageContainer = ({ user }) => {
                     placeholder="Type a message"
                     type="text"
                     value={message}
-                    style={{ overflow: "scroll" }}
+                    style={{ overflow: "hidden" }}
                     onChange={(e) => setMessage(e.target.value)}
                   />
                   <button disabled={!message} type="submit">
