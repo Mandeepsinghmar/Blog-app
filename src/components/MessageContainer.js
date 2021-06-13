@@ -94,6 +94,15 @@ const MessageContainer = ({ user }) => {
     <>
       {user ? (
         <div className="message-container" style={{ marginLeft: "190px" }}>
+          <div
+            style={{
+              display: "flex",
+              marginLeft: "10px",
+              justifyContent: "flex-start",
+            }}
+          >
+            <h1> All profiles</h1>
+          </div>
           {users ? (
             <div
               className="all-users"
