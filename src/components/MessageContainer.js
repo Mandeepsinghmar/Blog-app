@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { db, timestamp } from "../firebase";
 import Loader from "react-loader-spinner";
 import { Link } from "react-router-dom";
-import TextareaAutosize from "react-autosize-textarea";
+import ScrollableFeed from "react-scrollable-feed";
 
 const MessageContainer = ({ user }) => {
   const [users, setUsers] = useState([]);
@@ -14,12 +14,8 @@ const MessageContainer = ({ user }) => {
   const [chattingUserId, setChattingUserId] = useState(null);
   const [conversations, setConversations] = useState([]);
   const [User, setUser] = useState(null);
-  const messagesEndRef = useRef(null);
+
   const loggedInUser = user;
-
-  // useEffect(() => {
-
-  // }, [message]);
 
   useEffect(() => {
     if (user) {
@@ -91,7 +87,7 @@ const MessageContainer = ({ user }) => {
     await db.collection("conversations").add(msg);
 
     setMessage("");
-    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    // messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -230,57 +226,57 @@ const MessageContainer = ({ user }) => {
 
           {/* message section */}
           <>
-            <main className="main" style={{ marginTop: "10px" }}>
-              {chattingStarted ? (
-                conversations.map((conversation) => (
-                  <>
-                    <div
-                      className={`message ${
-                        conversation.loggedInUserId === loggedInUser.uid
-                          ? "sent"
-                          : "received"
-                      } `}
-                    >
-                      <Link
-                        to={
+            {chattingStarted ? (
+              <ScrollableFeed>
+                <main className="main" style={{ marginTop: "10px" }}>
+                  {conversations.map((conversation) => (
+                    <>
+                      <div
+                        className={`message ${
                           conversation.loggedInUserId === loggedInUser.uid
-                            ? `/blogs/${loggedInUser.uid}`
-                            : `/blogs/${chattingUserId}`
-                        }
+                            ? "sent"
+                            : "received"
+                        } `}
                       >
-                        <img
-                          src={
+                        <Link
+                          to={
                             conversation.loggedInUserId === loggedInUser.uid
-                              ? loggedInUser.photoURL
-                              : chattingUserImage
+                              ? `/blogs/${loggedInUser.uid}`
+                              : `/blogs/${chattingUserId}`
                           }
-                          alt=""
-                        />
-                      </Link>
-                      {/* {console.log(conversation.createdAt} */}
-                      <p ref={messagesEndRef} className="msg">
-                        {conversation.message}
-                      </p>
-                    </div>
-                    {/* <span ref={messagesEndRef}></span> */}
-                  </>
-                ))
-              ) : (
-                <div>
-                  <h1>Choose any profile to chat!</h1>
-                </div>
-              )}
-            </main>
+                        >
+                          <img
+                            src={
+                              conversation.loggedInUserId === loggedInUser.uid
+                                ? loggedInUser.photoURL
+                                : chattingUserImage
+                            }
+                            alt=""
+                          />
+                        </Link>
+                        {/* {console.log(conversation.createdAt} */}
+                        <p className="msg">{conversation.message}</p>
+                      </div>
+                    </>
+                  ))}
+                </main>
+              </ScrollableFeed>
+            ) : (
+              <div>
+                <h1>Choose any profile to chat!</h1>
+              </div>
+            )}
 
             {/* chating input */}
             {chattingStarted ? (
               <div className="msg-form-container">
                 <form className="msg-form" onSubmit={submitMessage}>
-                  <TextareaAutosize
+                  <textarea
                     className="input"
-                    placeholder="Send messages"
+                    placeholder="Type a message"
                     type="text"
                     value={message}
+                    style={{ overflow: "scroll" }}
                     onChange={(e) => setMessage(e.target.value)}
                   />
                   <button disabled={!message} type="submit">
